@@ -1,0 +1,57 @@
+
+.container {
+    position: relative;
+    left: 10rem;
+    top: 3rem;
+    width: calc(100vw - 10rem);
+    display: grid;
+    grid-template-areas: 'table right-col' ;
+    grid-template-columns: 2fr 1fr;
+}
+
+
+.page-container {
+    padding: 20px;
+    grid-area: 'table';
+}
+
+.right-column {
+    padding: 20px;
+    grid-area: 'right-col';
+    //background-color: aqua;
+}
+
+
+.dialog-background {
+    z-index: 10;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;   
+   }
+   
+   
+   .dialog-layer {
+       position: absolute;
+       width: 100%;
+       top: 0;
+       left: 0;
+       height: 100vh;
+       background-color: black;
+       opacity: 0.5;  
+       z-index: 11;
+   }
+   
+   .dialog-window {
+       z-index: 12;
+    //    width: 500px; //remove
+        max-height: 100vh; //remove
+    //    background-color: c
+       border-radius: 5px;
+       overflow-y: scroll;
+
+   }
