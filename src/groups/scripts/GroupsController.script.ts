@@ -104,8 +104,9 @@ export class GroupsControllerScript extends Script<
               text: `Группа ${newGroupName} обновлена`,
             });
             setTimeout(() => {
+              this.opts.setStatus('setSuccessMessage', null);
               this.opts.setStatus('closeGroupForm', null);
-            }, 300);
+            }, 400);
           }
         },
       });
