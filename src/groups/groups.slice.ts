@@ -46,6 +46,7 @@ export type IGroupsState = {
     selectedGroupIndex?: number;
     isReady?: boolean;
     error?: string;
+    successMessage?: string;
   };
   groupsRightColumn: {
     usersList: Array<IUsersRow>;
@@ -89,6 +90,8 @@ export type IGroupsTriggers = {
     setGroupsList: Array<IGroupRow>;
     setIsReady: boolean;
     setError: string | null;
+    setSuccessMessage: string | null;
+    throwSuccess: { text: string };
     throwError: { text: ERRORS; type: string };
     openCreateGroupForm: null;
     openEditGroupForm: { groupId: number };
@@ -170,9 +173,13 @@ const biteGroupsController = Bite<
     setGroupsList(state: IGroupsState, payload) {
       state.groupsComponent.groupsList = payload;
     },
+    throwSuccess: null,
     throwError: null,
     setError(state, payload) {
       state.groupsController.error = payload;
+    },
+    setSuccessMessage(state, payload) {
+      state.groupsController.successMessage = payload;
     },
     openCreateGroupForm: null,
     openEditGroupForm: null,

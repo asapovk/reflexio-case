@@ -55,6 +55,12 @@ export class GroupsControllerScript extends Script<
     }
   }
   watch(args: WatchArgsType<_ITriggers, 'groupsController'>): void {
+    const throwSuccessEvent = this.opts.catchStatus('throwSuccess', args);
+    if (throwSuccessEvent.isCatched) {
+      const text = throwSuccessEvent.payload.text;
+      this.opts.setStatus('setSuccessMessage', text);
+    }
+
     const unselectCurrentGroupEvent = this.opts.catchStatus(
       'unselectCurrentGroup',
       args
@@ -94,7 +100,12 @@ export class GroupsControllerScript extends Script<
           });
           if (!saveRes.rejected) {
             this.handleUpdateGroupInList({ name: newGroupName }, groupId);
-            this.opts.setStatus('closeGroupForm', null);
+            this.opts.setStatus('throwSuccess', {
+              text: `Группа ${newGroupName} обновлена`,
+            });
+            setTimeout(() => {
+              this.opts.setStatus('closeGroupForm', null);
+            }, 300);
           }
         },
       });
@@ -121,7 +132,13 @@ export class GroupsControllerScript extends Script<
               groupId: Date.now(), //saveRes.data.createGroup,
               name: newGroupName,
             });
-            this.opts.setStatus('closeGroupForm', null);
+            this.opts.setStatus('throwSuccess', {
+              text: `Группа ${newGroupName} создана`,
+            });
+            setTimeout(() => {
+              this.opts.setStatus('setSuccessMessage', null);
+              this.opts.setStatus('closeGroupForm', null);
+            }, 400);
           }
         },
       });

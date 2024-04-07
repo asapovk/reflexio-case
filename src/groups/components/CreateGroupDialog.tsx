@@ -10,10 +10,8 @@ export const CreateGroupDialog = () => {
   const trigger = useTrigger<_ITriggers>('CreateGroupDialog');
   const appState = useReflector<_ITriggers, _IState, _IState>(
     (state) => state,
-    ['loadGroups', 'createGroupForm']
+    ['groupsController', 'createGroupForm']
   );
-
-  console.log(appState.groups);
 
   return (
     <div className='groups-dialog'>
@@ -31,6 +29,9 @@ export const CreateGroupDialog = () => {
           />
           <div className='form-error'>
             {appState.groups.createGroupForm?.formError}
+          </div>
+          <div className='success-message'>
+            {appState.groups.groupsController.successMessage}
           </div>
         </div>
       </div>

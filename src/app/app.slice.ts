@@ -15,6 +15,7 @@ import { IEventManagerTriggers } from '@reflexio/bite-event-manager-v1/lib/types
 import { IUsersTriggers } from '../users/users.slice';
 import { NotificationScript } from './scripts/Notification.script';
 import { INotificationConfig } from '../_interfaces/app/NotificationConfig.interface';
+import { ERRORS } from '../_utils/app/mapErrors';
 
 export interface StagerContext {
   data: any;
@@ -69,6 +70,8 @@ export const appInitialState: IAppState = {
 export type IAppTriggers = {
   appController: BiteStatusWrap<{
     init: null;
+    throwError: { text: ERRORS; type: string };
+    throwSuccess: { text: string };
     setState: Partial<IAppState>;
     setSideBar: 'users' | 'groups' | 'off';
     setPage: Partial<IAppState['appController']['page']>;
@@ -100,6 +103,8 @@ export const appControllerBite = Bite<
 >(
   {
     init: null,
+    throwError: null,
+    throwSuccess: null,
     setState(state, payload) {
       Object.assign(state.appController, payload);
     },

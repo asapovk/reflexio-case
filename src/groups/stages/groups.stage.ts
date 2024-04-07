@@ -10,8 +10,11 @@ export const groupsStages: { [key: string]: (p?: any) => Stage<OPTS> } = {
     assemble: (opt) => {
       opt.trigger('eventManager', 'forward', {
         from: { groupsController: 'throwError' },
-        to: { notification: 'show' },
-        payload: { text: 'Ошибка загрузки' },
+        to: { appController: 'throwError' },
+      });
+      opt.trigger('eventManager', 'forward', {
+        from: { groupsController: 'throwSuccess' },
+        to: { appController: 'throwSuccess' },
       });
     },
     disassemble: (opt) => {
@@ -52,6 +55,10 @@ export const groupsStages: { [key: string]: (p?: any) => Stage<OPTS> } = {
   DIALOG_CREATE_GROUP: (params?: Array<number>) => ({
     name: 'DIALOG_CREATE_GROUP',
     assemble: async (opt) => {
+      opt.trigger('eventManager', 'unbind', { groupsController: 'throwError' });
+      opt.trigger('eventManager', 'unbind', {
+        groupsController: 'throwSuccess',
+      });
       opt.trigger('groupsController', 'openCreateGroupForm', null);
       opt.trigger('appController', 'setDialog', {
         createGroup: true,
@@ -82,10 +89,8 @@ export const groupsStages: { [key: string]: (p?: any) => Stage<OPTS> } = {
     name: 'DIALOG_EDIT_GROUP',
     assemble: async (opt, { paramVals }) => {
       opt.trigger('eventManager', 'unbind', { groupsController: 'throwError' });
-      opt.trigger('eventManager', 'forward', {
-        from: { groupsController: 'throwError' },
-        to: { createGroupForm: 'setFormError' },
-        payload: { error: 'Ошибка' },
+      opt.trigger('eventManager', 'unbind', {
+        groupsController: 'throwSuccess',
       });
       const groupId = Number(paramVals[params[0]]);
       opt.trigger('groupsController', 'openEditGroupForm', {

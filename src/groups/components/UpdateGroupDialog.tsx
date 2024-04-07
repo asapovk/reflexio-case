@@ -30,6 +30,9 @@ export const UpdateGroupDialog = () => {
           <div className='form-error'>
             {appState.groups.createGroupForm?.formError}
           </div>
+          <div className='success-message'>
+            {appState.groups.groupsController.successMessage}
+          </div>
         </div>
       </div>
       <div className='down-block'>

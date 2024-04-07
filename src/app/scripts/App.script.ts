@@ -3,6 +3,7 @@ import { _IState, _ITriggers } from '../../_redux/types';
 import { ScriptOptsType, WatchArgsType } from '@reflexio/core-v1/lib/types';
 import { commonRoutes } from '../routes/common';
 import { groupsRoutes } from '../routes/groups';
+import { mapError } from '../../_utils/auth/errors';
 
 const routes = [...commonRoutes, ...groupsRoutes];
 
@@ -47,6 +48,27 @@ export class AppScript extends Script<
     if (goToDestinationEvent.isCatched) {
       const destination = this.opts.getCurrentState().app.router.destination;
       this.opts.trigger('stager', 'go', destination);
+    }
+    const throwErrorEvent = this.opts.catchStatus('throwError', args);
+    if (throwErrorEvent.isCatched) {
+      const text = throwErrorEvent.payload.text;
+      const mappedErrorText = mapError[text];
+      if (mappedErrorText) {
+        this.opts.trigger('notification', 'show', {
+          text: mappedErrorText,
+          color: 'RED',
+          timeout: 2000,
+        });
+      }
+    }
+    const throwSuccessEvent = this.opts.catchStatus('throwSuccess', args);
+    if (throwSuccessEvent.isCatched) {
+      const text = throwSuccessEvent.payload.text;
+      this.opts.trigger('notification', 'show', {
+        text: text,
+        color: 'GREEN',
+        timeout: 2000,
+      });
     }
   }
 }
