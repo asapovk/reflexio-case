@@ -10,7 +10,7 @@ export const UpdateGroupDialog = () => {
   const trigger = useTrigger<_ITriggers>('CreateGroupDialog');
   const appState = useReflector<_ITriggers, _IState, _IState>(
     (state) => state,
-    ['createGroup', 'createGroupForm']
+    ['groupsController', 'createGroupForm']
   );
 
   return (
