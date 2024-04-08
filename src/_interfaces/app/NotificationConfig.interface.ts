@@ -1,4 +1,4 @@
 export interface INotificationConfig {
-  color?: 'RED' | 'GREEN' | 'PRIMARY';
+  color?: 'ERROR' | 'SUCCESS' | 'PRIMARY';
   timeout?: number;
 }

@@ -47,9 +47,12 @@ export type IAppState = {
   router: IRouterState;
   stager?: StagerContext;
   notification?: {
+    smartNotification?: {
+      leaveForm?: boolean;
+    };
     isShown: boolean;
-    color: 'GREEN' | 'RED' | 'PRIMARY';
-    text: string;
+    color?: 'ERROR' | 'SUCCESS' | 'PRIMARY';
+    text?: string;
   };
 };
 
@@ -83,9 +86,11 @@ export type IAppTriggers = {
     init: { config?: INotificationConfig };
     show: {
       text: string;
-      color?: 'GREEN' | 'RED' | 'PRIMARY';
+      color?: 'ERROR' | 'SUCCESS' | 'PRIMARY';
       timeout?: number;
     };
+    clickYes: null;
+    showSmart: Partial<IAppState['notification']['smartNotification']>;
     setState: Partial<IAppState['notification']>;
     close: null;
     drop: null;
@@ -142,12 +147,19 @@ export const notificationBite = Bite<
   {
     close: null,
     drop: null,
+    showSmart: null,
     setState(state, payload) {
       state.notification = payload as any;
     },
+    clickYes: null,
     show: null,
     init(state, payload) {
-      state.notification = {} as any;
+      state.notification = {
+        isShown: true,
+        smartNotification: {
+          leaveForm: true,
+        },
+      };
     },
   },
   {

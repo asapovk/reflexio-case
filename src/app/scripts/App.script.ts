@@ -56,7 +56,7 @@ export class AppScript extends Script<
       if (mappedErrorText) {
         this.opts.trigger('notification', 'show', {
           text: mappedErrorText,
-          color: 'RED',
+          color: 'ERROR',
           timeout: 2000,
         });
       }
@@ -66,7 +66,7 @@ export class AppScript extends Script<
       const text = throwSuccessEvent.payload.text;
       this.opts.trigger('notification', 'show', {
         text: text,
-        color: 'GREEN',
+        color: 'SUCCESS',
         timeout: 2000,
       });
     }

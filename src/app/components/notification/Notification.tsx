@@ -4,21 +4,28 @@ import { _IState, _ITriggers } from 'src/_redux/types';
 import { useReflector } from '@reflexio/react-v1/lib/useReflector';
 import { useTrigger } from '@reflexio/react-v1/lib/useTrigger';
 import './style.less';
+import { LeaveFormNotification } from './LeaveFormNofication';
+import classNames from 'classnames';
 
 export const Notification = () => {
-  const notifications = useReflector<
-    _ITriggers,
-    _IState,
-    _IState['app']['notification']
-  >((state) => state.app.notification, ['notification']);
+  const state = useReflector<_ITriggers, _IState, _IState>(
+    (state) => state,
+    ['notification']
+  );
   const trigger = useTrigger<_ITriggers>();
 
-  return notifications?.isShown ? (
+  const notificationState = state.app.notification;
+  const colorClass = state.app?.notification?.color || 'primary';
+
+  return notificationState?.isShown ? (
     <div
-      onClick={() => trigger('notification', 'close', null)}
-      className='notification'
+      className={classNames(
+        'notification',
+        `notification-${colorClass.toLowerCase()}`
+      )}
     >
-      {notifications.text}
+      {!notificationState.smartNotification ? notificationState.text : null}
+      {notificationState.smartNotification ? <LeaveFormNotification /> : null}
     </div>
   ) : null;
 };
