@@ -123,6 +123,7 @@ export class GroupsControllerScript extends Script<
           },
         ],
         onSubmit: async (fst, ut) => {
+          this.opts.trigger('router', 'deleteNavigationBlocker', null);
           const newGroupName = fst.fields['groupName'].value;
           const saveRes = await this.opts.hook('updateGroup', 'init', 'done', {
             groupId: groupId,
@@ -134,7 +135,6 @@ export class GroupsControllerScript extends Script<
               text: `Группа ${newGroupName} обновлена`,
             });
             setTimeout(() => {
-              this.opts.trigger('router', 'deleteNavigationBlocker', null);
               this.opts.setStatus('setSuccessMessage', null);
               this.opts.setStatus('closeGroupForm', null);
             }, 400);
