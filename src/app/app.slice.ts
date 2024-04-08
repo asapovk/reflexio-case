@@ -155,11 +155,11 @@ export const notificationBite = Bite<
     show: null,
     init(state, payload) {
       state.notification = {
-        isShown: true,
-        smartNotification: {
-          leaveForm: true,
-        },
-      };
+        // isShown: true,
+        // smartNotification: {
+        //   leaveForm: true,
+        // },
+      } as any;
     },
   },
   {

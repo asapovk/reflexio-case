@@ -17,6 +17,12 @@ export class GroupsControllerScript extends Script<
     super();
     this.opts = opts;
   }
+  /*
+   ** Сюда будем сохранять значение из формы в момент ее закрытия,
+   ** и будем брать это значения для changeTracker чтобы понять нужно
+   ** ли нам блокировать роутинг или нет.
+   */
+  private currentFormInputValue: string;
   private selectCurrentGroup(groupId: number) {
     let index;
     const currGroup = this.opts
@@ -36,6 +42,22 @@ export class GroupsControllerScript extends Script<
       this.opts.getCurrentState().groups.groupsComponent.groupsList;
     this.opts.setStatus('setGroupsList', [row, ...currList]);
   }
+  private checker = () => {
+    console.log('CHECKER!');
+    const inputValue =
+      this.opts.getCurrentState().groups.createGroupForm?.fields['groupName']
+        .value;
+    const savedValue =
+      this.opts.getCurrentState().groups.groupsController?.currentGroup?.name;
+    const show = !(inputValue !== savedValue);
+    if (!show)
+      this.opts.trigger('notification', 'showSmart', {
+        leaveForm: true,
+      });
+
+    return show;
+  };
+
   private handleUpdateGroupInList(row: Partial<IGroupRow>, groupId: number) {
     const currList =
       this.opts.getCurrentState().groups.groupsComponent.groupsList;
@@ -55,6 +77,14 @@ export class GroupsControllerScript extends Script<
     }
   }
   watch(args: WatchArgsType<_ITriggers, 'groupsController'>): void {
+    const blockCurrentPageEvent = this.opts.catchStatus(
+      'blockCurrentPage',
+      args
+    );
+    if (blockCurrentPageEvent.isCatched) {
+      console.log('BLOCK');
+      this.opts.trigger('router', 'setNavigationBlocker', this.checker);
+    }
     const throwSuccessEvent = this.opts.catchStatus('throwSuccess', args);
     if (throwSuccessEvent.isCatched) {
       const text = throwSuccessEvent.payload.text;
@@ -104,6 +134,7 @@ export class GroupsControllerScript extends Script<
               text: `Группа ${newGroupName} обновлена`,
             });
             setTimeout(() => {
+              this.opts.trigger('router', 'deleteNavigationBlocker', null);
               this.opts.setStatus('setSuccessMessage', null);
               this.opts.setStatus('closeGroupForm', null);
             }, 400);

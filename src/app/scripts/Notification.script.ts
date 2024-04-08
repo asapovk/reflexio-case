@@ -26,13 +26,27 @@ export class NotificationScript extends Script<
   };
   private timeOut: any; //TimeoutObject
   watch(args: WatchArgsType<_ITriggers, 'notification'>): void {
+    const showSmartEvent = this.opts.catchStatus('showSmart', args);
+    if (showSmartEvent.isCatched) {
+      this.opts.setStatus('setState', {
+        isShown: true,
+        smartNotification: showSmartEvent.payload,
+      });
+    }
+    const passBlockerEvent = this.opts.catchStatus('clickYes', args);
+    if (passBlockerEvent.isCatched) {
+      this.opts.trigger('router', 'deleteNavigationBlocker', null);
+      this.opts.trigger('router', 'goToDestination', null);
+      this.opts.setStatus('close', null);
+    }
     const closeEvent = this.opts.catchStatus('close', args);
     if (closeEvent.isCatched) {
+      this.opts.setStatus('setState', {
+        isShown: false,
+        smartNotification: undefined,
+      });
       if (this.timeOut) {
         clearTimeout(this.timeOut);
-        this.opts.setStatus('setState', {
-          isShown: false,
-        });
       }
     }
     const showEvent = this.opts.catchStatus('show', args);

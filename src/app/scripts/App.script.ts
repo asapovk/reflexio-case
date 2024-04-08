@@ -47,7 +47,9 @@ export class AppScript extends Script<
     );
     if (goToDestinationEvent.isCatched) {
       const destination = this.opts.getCurrentState().app.router.destination;
-      this.opts.trigger('stager', 'go', destination);
+      if (destination) {
+        this.opts.trigger('stager', 'go', destination);
+      }
     }
     const throwErrorEvent = this.opts.catchStatus('throwError', args);
     if (throwErrorEvent.isCatched) {

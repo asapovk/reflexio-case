@@ -109,8 +109,14 @@ export const groupsStages: { [key: string]: (p?: any) => Stage<OPTS> } = {
         to: { router: 'goTo' },
         payload: '/groups',
       });
+      opt.trigger('groupsController', 'blockCurrentPage', null);
+      ///Match Yes to internal Yes
+      ///BlockPage => interamly setBlocker
+      //on Close => deleteBlocker
+      //on Yes => deleteBlocker
     },
     disassemble: (opt) => {
+      opt.trigger('router', 'deleteNavigationBlocker', null);
       opt.trigger('eventManager', 'unbind', {
         groupsController: 'closeGroupForm',
       });

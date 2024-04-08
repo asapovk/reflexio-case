@@ -82,6 +82,7 @@ export const groupsInitialState: IGroupsState = {
 export type IGroupsTriggers = {
   groupsController: BiteStatusWrap<{
     init: null;
+    blockCurrentPage: null;
     selectCurrentGroup: { groupId: number };
     setCurrentGroup: IGroupRow;
     unselectCurrentGroupIndex: null;
@@ -170,6 +171,7 @@ const biteGroupsController = Bite<
 >(
   {
     selectCurrentGroup: null,
+    blockCurrentPage: null,
     setGroupsList(state: IGroupsState, payload) {
       state.groupsComponent.groupsList = payload;
     },
