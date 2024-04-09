@@ -39,7 +39,7 @@ export class AppScript extends Script<
   }
 
   watch(args: WatchArgsType<_ITriggers, 'appController'>): void {
-    console.log('catch LOG event', args.trigger, args.status);
+    //console.log('catch LOG event', args.trigger, args.status);
 
     const goToDestinationEvent = this.opts.catchEvent(
       'router',

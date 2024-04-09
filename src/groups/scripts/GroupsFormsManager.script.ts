@@ -117,7 +117,7 @@ export class GroupsFormsManagerScript extends Script<
     const openPinnedFormEvent = this.opts.catchStatus('openPinnedForm', args);
     if (openPinnedFormEvent.isCatched) {
       this.opts.trigger('router', 'goTo', this.pinnedRoute);
-      this.openPinnedForm();
+      setTimeout(() => this.openPinnedForm());
     }
 
     const dropCurrentFormEvent = this.opts.catchStatus('dropCurrentForm', args);
