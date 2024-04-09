@@ -25,6 +25,7 @@ export class AppScript extends Script<
     this.opts.trigger('eventManager', 'init', null);
     this.opts.trigger('router', 'init', null);
     this.opts.trigger('notification', 'init', { config: null });
+    this.opts.trigger('groupsFormsManager', 'init', null);
     this.opts.trigger('stager', 'init', {
       failHandler: (opt) => {
         console.log('fail');

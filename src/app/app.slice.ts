@@ -91,6 +91,7 @@ export type IAppTriggers = {
       timeout?: number | 'permament';
     };
     clickYes: null;
+    clickYesReturnToForm: null;
     showSmart: Partial<IAppState['notification']['smartNotification']>;
     setState: Partial<IAppState['notification']>;
     close: null;
@@ -153,6 +154,7 @@ export const notificationBite = Bite<
       state.notification = payload as any;
     },
     clickYes: null,
+    clickYesReturnToForm: null,
     show: null,
     init(state, payload) {
       state.notification = {

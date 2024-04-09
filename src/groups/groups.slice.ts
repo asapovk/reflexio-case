@@ -93,6 +93,10 @@ export type IGroupsTriggers = {
     drop: null;
     openForm: { formId: number };
     openNewForm: { type: 'edit' | 'create'; initialData?: string };
+    releaseLockedForm: null;
+    lockCurrentForm: null;
+    pinLockedForm: null;
+    openPinnedForm: null;
     setFormsList: IGroupsState['groupsFormsManager'];
     dropForm: { formId: number };
     updateCurrentForm: { data: any };
@@ -113,7 +117,9 @@ export type IGroupsTriggers = {
     throwSuccess: { text: string };
     throwError: { text: ERRORS; type: string };
     openCreateGroupForm: null;
+    submitCreateGroupForm: IFormState;
     openEditGroupForm: { groupId: number };
+    submitEditGroupForm: IFormState;
     closeGroupForm: null;
   }>;
   groupsRightColumn: BiteStatusWrap<{
@@ -196,6 +202,10 @@ const biteGroupsFormsManager = Bite<
     drop(state, payload) {
       state.groupsFormsManager = null;
     },
+    releaseLockedForm: null,
+    lockCurrentForm: null,
+    pinLockedForm: null,
+    openPinnedForm: null,
     dropForm: null,
     openForm: null,
     openNewForm: null,
@@ -234,7 +244,9 @@ const biteGroupsController = Bite<
       state.groupsController.successMessage = payload;
     },
     openCreateGroupForm: null,
+    submitCreateGroupForm: null,
     openEditGroupForm: null,
+    submitEditGroupForm: null,
     closeGroupForm: null,
     setIsReady: null,
     init: null,
@@ -307,7 +319,7 @@ export const groupsSlice = Slice<
       pr: (opt, input) => updateGroup(input), //opt.injected.loadUsers(),
       timeout: 9000,
       errorCatcher: (opt, resp: any) => {
-        if (!resp?.updateGroup) {
+        if (!resp?.updateGroups) {
           opt.trigger('groupsController', 'throwError', {
             type: 'http',
             text: 'GROUP_UPDATE_FAIL',

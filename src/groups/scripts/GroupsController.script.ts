@@ -17,12 +17,7 @@ export class GroupsControllerScript extends Script<
     super();
     this.opts = opts;
   }
-  /*
-   ** Сюда будем сохранять значение из формы в момент ее закрытия,
-   ** и будем брать это значения для changeTracker чтобы понять нужно
-   ** ли нам блокировать роутинг или нет.
-   */
-  private currentFormInputValue: string;
+
   private selectCurrentGroup(groupId: number) {
     let index;
     const currGroup = this.opts
@@ -76,7 +71,70 @@ export class GroupsControllerScript extends Script<
       this.opts.setStatus('setIsReady', true);
     }
   }
-  watch(args: WatchArgsType<_ITriggers, 'groupsController'>): void {
+  async watch(
+    args: WatchArgsType<_ITriggers, 'groupsController'>
+  ): Promise<void> {
+    const submitCreateGroupFormEvent = this.opts.catchStatus(
+      'submitCreateGroupForm',
+      args
+    );
+    if (submitCreateGroupFormEvent.isCatched) {
+      const fs = submitCreateGroupFormEvent.payload;
+      const newGroupName = fs.fields['groupName'].value;
+      const saveRes = await this.opts.hook('createGroup', 'init', 'done', {
+        groupName: newGroupName,
+      });
+      if (!saveRes.rejected) {
+        this.handleAddGroupToList({
+          dtCreate: new Date().toISOString(),
+          groupId: Date.now(), //saveRes.data.createGroup,
+          name: newGroupName,
+        });
+        this.opts.setStatus('throwSuccess', {
+          text: `Группа ${newGroupName} создана`,
+        });
+        setTimeout(() => {
+          this.opts.setStatus('setSuccessMessage', null); //чтобы очистить сообщение
+          this.opts.setStatus('closeGroupForm', null);
+        }, 400);
+      }
+    }
+    const submitEditGroupFormEvent = this.opts.catchStatus(
+      'submitEditGroupForm',
+      args
+    );
+    if (submitEditGroupFormEvent.isCatched) {
+      this.opts.trigger('groupsFormsManager', 'lockCurrentForm', null);
+      const fs = submitEditGroupFormEvent.payload;
+      const currentGroupId =
+        this.opts.getCurrentState().groups.groupsController.currentGroup
+          .groupId;
+      this.opts.trigger('router', 'deleteNavigationBlocker', null);
+      const newGroupName = fs.fields['groupName'].value;
+      this.opts.setStatus('closeGroupForm', null);
+      const saveRes = await this.opts.hook('updateGroup', 'init', 'done', {
+        groupId: currentGroupId,
+        groupName: newGroupName,
+      });
+      if (!saveRes.rejected) {
+        this.handleUpdateGroupInList({ name: newGroupName }, currentGroupId);
+        this.opts.setStatus('throwSuccess', {
+          text: `Группа ${newGroupName} обновлена`,
+        });
+        setTimeout(() => {
+          this.opts.trigger('groupsFormsManager', 'releaseLockedForm', null);
+          this.opts.setStatus('setSuccessMessage', null);
+        }, 400);
+      } else {
+        this.opts.setStatus('throwError', {
+          text: 'GROUP_UPDATE_FAIL',
+          type: 'http',
+        });
+        setTimeout(() => {
+          this.opts.trigger('groupsFormsManager', 'pinLockedForm', null);
+        }, 1000);
+      }
+    }
     const blockCurrentPageEvent = this.opts.catchStatus(
       'blockCurrentPage',
       args
@@ -113,66 +171,16 @@ export class GroupsControllerScript extends Script<
       const groupId = openEditGroupEvent.payload.groupId;
       const { currGroup, index } = this.selectCurrentGroup(groupId);
       this.opts.setStatus('setCurrentGroup', currGroup);
-      this.opts.trigger('createGroupForm', 'init', {
-        fieldsOpts: [
-          {
-            name: 'groupName',
-            initialValue: currGroup.name,
-            validators: [],
-            sync: true,
-          },
-        ],
-        onSubmit: async (fst, ut) => {
-          this.opts.trigger('router', 'deleteNavigationBlocker', null);
-          const newGroupName = fst.fields['groupName'].value;
-          const saveRes = await this.opts.hook('updateGroup', 'init', 'done', {
-            groupId: groupId,
-            groupName: newGroupName,
-          });
-          if (!saveRes.rejected) {
-            this.handleUpdateGroupInList({ name: newGroupName }, groupId);
-            this.opts.setStatus('throwSuccess', {
-              text: `Группа ${newGroupName} обновлена`,
-            });
-            setTimeout(() => {
-              this.opts.setStatus('setSuccessMessage', null);
-              this.opts.setStatus('closeGroupForm', null);
-            }, 400);
-          }
-        },
+      this.opts.trigger('groupsFormsManager', 'openNewForm', {
+        type: 'edit',
+        initialData: currGroup.name,
       });
     }
     const openCreateForm = this.opts.catchStatus('openCreateGroupForm', args);
     if (openCreateForm.isCatched) {
-      this.opts.trigger('createGroupForm', 'init', {
-        fieldsOpts: [
-          {
-            sync: true,
-            name: 'groupName',
-            initialValue: '',
-            validators: [],
-          },
-        ],
-        onSubmit: async (fst, ut) => {
-          const newGroupName = fst.fields['groupName'].value;
-          const saveRes = await this.opts.hook('createGroup', 'init', 'done', {
-            groupName: newGroupName,
-          });
-          if (!saveRes.rejected) {
-            this.handleAddGroupToList({
-              dtCreate: new Date().toISOString(),
-              groupId: Date.now(), //saveRes.data.createGroup,
-              name: newGroupName,
-            });
-            this.opts.setStatus('throwSuccess', {
-              text: `Группа ${newGroupName} создана`,
-            });
-            setTimeout(() => {
-              this.opts.setStatus('setSuccessMessage', null);
-              this.opts.setStatus('closeGroupForm', null);
-            }, 400);
-          }
-        },
+      this.opts.trigger('groupsFormsManager', 'openNewForm', {
+        type: 'create',
+        initialData: '',
       });
     }
   }

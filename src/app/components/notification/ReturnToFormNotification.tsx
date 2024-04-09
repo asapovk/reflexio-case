@@ -24,7 +24,7 @@ export const ReturnToFormNotification = () => {
             'button',
             `notification-${colorClass.toLowerCase()}`
           )}
-          onClick={() => trigger('notification', 'clickYes', null)}
+          onClick={() => trigger('notification', 'clickYesReturnToForm', null)}
         >
           Да
         </button>

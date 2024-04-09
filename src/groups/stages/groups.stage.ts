@@ -75,6 +75,10 @@ export const groupsStages: { [key: string]: (p?: any) => Stage<OPTS> } = {
       });
     },
     disassemble: (opt) => {
+      opt.trigger('eventManager', 'forward', {
+        from: { notification: 'clickYesReturnToForm' },
+        to: { groupsFormsManager: 'openPinnedForm' },
+      });
       opt.trigger('eventManager', 'unbind', {
         groupsController: 'closeGroupForm',
       });
@@ -82,7 +86,8 @@ export const groupsStages: { [key: string]: (p?: any) => Stage<OPTS> } = {
         appController: 'closeDialog',
       });
       opt.trigger('appController', 'closeDialog', null);
-      opt.trigger('createGroupForm', 'dropForm', null);
+      //opt.trigger('createGroupForm', 'dropForm', null);
+      opt.trigger('groupsFormsManager', 'dropCurrentForm', null);
     },
   }),
   DIALOG_EDIT_GROUP: (params?: Array<number>) => ({
@@ -116,13 +121,19 @@ export const groupsStages: { [key: string]: (p?: any) => Stage<OPTS> } = {
       //on Yes => deleteBlocker
     },
     disassemble: (opt) => {
+      opt.trigger('eventManager', 'forward', {
+        from: { notification: 'clickYesReturnToForm' },
+        to: { groupsFormsManager: 'openPinnedForm' },
+      });
+
       opt.trigger('router', 'deleteNavigationBlocker', null);
       opt.trigger('eventManager', 'unbind', {
         groupsController: 'closeGroupForm',
       });
       opt.trigger('eventManager', 'unbind', { appController: 'closeDialog' });
       opt.trigger('appController', 'closeDialog', null);
-      opt.trigger('createGroupForm', 'dropForm', null);
+      //opt.trigger('createGroupForm', 'dropForm', null);
+      opt.trigger('groupsFormsManager', 'dropCurrentForm', null);
       //opt.trigger('groupsController', 'unselectCurrentGroup', null);
     },
   }),
