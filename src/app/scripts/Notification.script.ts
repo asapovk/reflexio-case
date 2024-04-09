@@ -34,6 +34,8 @@ export class NotificationScript extends Script<
       });
     }
     const passBlockerEvent = this.opts.catchStatus('clickYes', args);
+    //В иделае ЛЮБУЮ обработку clickYes лучше делать route-related; так например для returnToForm - тут ее
+    // точно сделать нельзя!
     if (passBlockerEvent.isCatched) {
       this.opts.trigger('router', 'deleteNavigationBlocker', null);
       this.opts.trigger('router', 'goToDestination', null);
@@ -57,9 +59,11 @@ export class NotificationScript extends Script<
         isShown: true,
         text: params.text,
       });
-      this.timeOut = setTimeout(() => {
-        this.opts.setStatus('close', null);
-      }, params.timeout);
+      if (params.timeout !== 'permament') {
+        this.timeOut = setTimeout(() => {
+          this.opts.setStatus('close', null);
+        }, params.timeout);
+      }
     }
   }
 }

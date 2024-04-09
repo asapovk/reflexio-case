@@ -49,6 +49,7 @@ export type IAppState = {
   notification?: {
     smartNotification?: {
       leaveForm?: boolean;
+      returnToForm?: boolean;
     };
     isShown: boolean;
     color?: 'ERROR' | 'SUCCESS' | 'PRIMARY';
@@ -87,7 +88,7 @@ export type IAppTriggers = {
     show: {
       text: string;
       color?: 'ERROR' | 'SUCCESS' | 'PRIMARY';
-      timeout?: number;
+      timeout?: number | 'permament';
     };
     clickYes: null;
     showSmart: Partial<IAppState['notification']['smartNotification']>;

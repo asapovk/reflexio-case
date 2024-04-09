@@ -6,6 +6,7 @@ import { useTrigger } from '@reflexio/react-v1/lib/useTrigger';
 import './style.less';
 import { LeaveFormNotification } from './LeaveFormNofication';
 import classNames from 'classnames';
+import { ReturnToFormNotification } from './ReturnToFormNotification';
 
 export const Notification = () => {
   const state = useReflector<_ITriggers, _IState, _IState>(
@@ -25,7 +26,12 @@ export const Notification = () => {
       )}
     >
       {!notificationState.smartNotification ? notificationState.text : null}
-      {notificationState.smartNotification ? <LeaveFormNotification /> : null}
+      {notificationState.smartNotification?.leaveForm ? (
+        <LeaveFormNotification />
+      ) : null}
+      {notificationState.smartNotification?.returnToForm ? (
+        <ReturnToFormNotification />
+      ) : null}
     </div>
   ) : null;
 };

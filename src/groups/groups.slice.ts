@@ -28,6 +28,7 @@ import { loadGroups } from '../_api/groups/loadGroups';
 import { createGroup } from '../_api/groups/createGroup';
 import { updateGroup } from '../_api/groups/updateGroup';
 import { ERRORS } from '../_utils/app/mapErrors';
+import { GroupsFormsManagerScript } from './scripts/GroupsFormsManager.script';
 
 export type IGroupsState = {
   loadGroups: AsyncState<null, ResQType<'groups'>>;
@@ -47,6 +48,13 @@ export type IGroupsState = {
     isReady?: boolean;
     error?: string;
     successMessage?: string;
+  };
+  groupsFormsManager?: {
+    formsList: Array<{
+      formId: number;
+      value: string;
+      type: 'edit' | 'create';
+    }>;
   };
   groupsRightColumn: {
     usersList: Array<IUsersRow>;
@@ -80,6 +88,16 @@ export const groupsInitialState: IGroupsState = {
 };
 
 export type IGroupsTriggers = {
+  groupsFormsManager: BiteStatusWrap<{
+    init: null;
+    drop: null;
+    openForm: { formId: number };
+    openNewForm: { type: 'edit' | 'create'; initialData?: string };
+    setFormsList: IGroupsState['groupsFormsManager'];
+    dropForm: { formId: number };
+    updateCurrentForm: { data: any };
+    dropCurrentForm: null;
+  }>;
   groupsController: BiteStatusWrap<{
     init: null;
     blockCurrentPage: null;
@@ -163,6 +181,38 @@ const groupsRightColumnBite = Bite<
   }
 );
 
+const biteGroupsFormsManager = Bite<
+  IGroupsTriggers,
+  IGroupsState,
+  'groupsFormsManager',
+  _ITriggers
+>(
+  {
+    init(state, pld) {
+      state.groupsFormsManager = {
+        formsList: [],
+      };
+    },
+    drop(state, payload) {
+      state.groupsFormsManager = null;
+    },
+    dropForm: null,
+    openForm: null,
+    openNewForm: null,
+    updateCurrentForm: null,
+    dropCurrentForm: null,
+    setFormsList(state, payload) {
+      state.groupsFormsManager = payload;
+    },
+  },
+  {
+    initOn: 'init',
+    watchScope: ['groupsFormsManager'],
+    script: GroupsFormsManagerScript,
+    instance: 'stable',
+  }
+);
+
 const biteGroupsController = Bite<
   IGroupsTriggers,
   IGroupsState,
@@ -220,6 +270,7 @@ export const groupsSlice = Slice<
     groupsRightColumn: groupsRightColumnBite,
     groupsController: biteGroupsController,
     createGroupForm: biteForms('createGroupForm'),
+    groupsFormsManager: biteGroupsFormsManager,
     loadGroups: biteAsync('loadGroups', {
       pr: (opt, input) => loadGroups(input), //opt.injected.loadUsers(),
       timeout: 9000,
