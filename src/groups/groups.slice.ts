@@ -320,10 +320,10 @@ export const groupsSlice = Slice<
       timeout: 9000,
       errorCatcher: (opt, resp: any) => {
         if (!resp?.updateGroups) {
-          opt.trigger('groupsController', 'throwError', {
-            type: 'http',
-            text: 'GROUP_UPDATE_FAIL',
-          });
+          // opt.trigger('groupsController', 'throwError', {
+          //   type: 'http',
+          //   text: 'GROUP_UPDATE_FAIL',
+          // });
 
           return true;
         }
