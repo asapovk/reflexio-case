@@ -4,6 +4,7 @@ import { ScriptOptsType, WatchArgsType } from '@reflexio/core-v1/lib/types';
 import { commonRoutes } from '../routes/common';
 import { groupsRoutes } from '../routes/groups';
 import { mapError } from '../../_utils/auth/errors';
+import { errorsMap } from '../../_utils/app/mapErrors';
 
 const routes = [...commonRoutes, ...groupsRoutes];
 
@@ -54,8 +55,9 @@ export class AppScript extends Script<
     }
     const throwErrorEvent = this.opts.catchStatus('throwError', args);
     if (throwErrorEvent.isCatched) {
+      console.log('THROW APP ERR');
       const text = throwErrorEvent.payload.text;
-      const mappedErrorText = mapError[text];
+      const mappedErrorText = errorsMap[text];
       if (mappedErrorText) {
         this.opts.trigger('notification', 'show', {
           text: mappedErrorText,

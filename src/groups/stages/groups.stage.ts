@@ -134,7 +134,6 @@ export const groupsStages: { [key: string]: (p?: any) => Stage<OPTS> } = {
       opt.trigger('appController', 'closeDialog', null);
       //opt.trigger('createGroupForm', 'dropForm', null);
       opt.trigger('groupsFormsManager', 'dropCurrentForm', null);
-      //opt.trigger('groupsController', 'unselectCurrentGroup', null);
     },
   }),
   GROUP_SELECT_CURRENT_GROUP: (params?: Array<number>) => ({

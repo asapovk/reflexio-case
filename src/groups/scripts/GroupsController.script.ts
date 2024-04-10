@@ -126,7 +126,8 @@ export class GroupsControllerScript extends Script<
           this.opts.setStatus('setSuccessMessage', null);
         }, 400);
       } else {
-        this.opts.setStatus('throwError', {
+        console.log('go error');
+        this.opts.trigger('groupsController', 'throwError', {
           text: 'GROUP_UPDATE_FAIL',
           type: 'http',
         });

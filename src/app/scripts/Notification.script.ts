@@ -15,7 +15,9 @@ export class NotificationScript extends Script<
     super();
     this.opts = opts;
   }
+  private cleared = false;
   init(args: { config?: INotificationConfig }): void {
+    console.log('init not');
     if (args.config) {
       this.configs = args.config;
     }
@@ -28,10 +30,14 @@ export class NotificationScript extends Script<
   watch(args: WatchArgsType<_ITriggers, 'notification'>): void {
     const showSmartEvent = this.opts.catchStatus('showSmart', args);
     if (showSmartEvent.isCatched) {
+      this.cleared = true;
       this.opts.setStatus('setState', {
         isShown: true,
         smartNotification: showSmartEvent.payload,
       });
+      if (this.timeOut) {
+        clearTimeout(this.timeOut);
+      }
     }
     const passBlockerEvent = this.opts.catchStatus('clickYes', args);
     //В иделае ЛЮБУЮ обработку clickYes лучше делать route-related; так например для returnToForm - тут ее
@@ -60,8 +66,11 @@ export class NotificationScript extends Script<
         text: params.text,
       });
       if (params.timeout !== 'permament') {
+        this.cleared = false;
         this.timeOut = setTimeout(() => {
-          this.opts.setStatus('close', null);
+          if (!this.cleared) {
+            this.opts.setStatus('close', null);
+          }
         }, params.timeout);
       }
     }

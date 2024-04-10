@@ -18,6 +18,8 @@ export const Notification = () => {
   const notificationState = state.app.notification;
   const colorClass = state.app?.notification?.color || 'primary';
 
+  console.log(notificationState);
+
   return notificationState?.isShown ? (
     <div
       className={classNames(

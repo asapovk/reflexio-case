@@ -54,21 +54,19 @@ export class GroupsFormsManagerScript extends Script<
     });
   }
   private saveFormData(formId: number, data: any, type: 'edit' | 'create') {
-    console.log("SAVE NEW DATA", data);
     this.formsMap[formId] = { data, type };
   }
 
   private pinLockedForm() {
     this.pinnedFormId = this.lockedFormId;
     this.lockedFormId = null;
-    console.log('this.pinnedFormId', this.pinnedFormId);
   }
 
   private openPinnedForm() {
     const formId = this.pinnedFormId;
     this.pinnedFormId = null;
     this.pinnedRoute = null;
-    this.dropFormInTray(formId);
+    //this.dropFormInTray(formId);
   }
   private dropFormInTray(fromId: number) {
     const newFormsList = this.opts
@@ -126,7 +124,6 @@ export class GroupsFormsManagerScript extends Script<
     }
     const openNewFormEvent = this.opts.catchStatus('openNewForm', args);
     if (openNewFormEvent.isCatched) {
-      console.log('NEW EVENT', this.pinnedFormId);
       if (!this.pinnedFormId) {
         const newFormId = Date.now();
         this.currentFormId = newFormId;
@@ -149,7 +146,6 @@ export class GroupsFormsManagerScript extends Script<
     if (openFormEvent.isCatched) {
       this.currentFormId = openFormEvent.payload.formId;
       const currForm = this.formsMap[this.currentFormId];
-      console.log('OPEN FORM ', 'cur', currForm);
       const currFormType = currForm.type;
       if (currFormType === 'create') {
         this.openGroupCreateForm(currForm.data);
