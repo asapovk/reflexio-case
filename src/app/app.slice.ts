@@ -45,7 +45,6 @@ export type IAppState = {
     sideBar?: 'users' | 'groups' | 'off';
   };
   router: IRouterState;
-  stager?: StagerContext;
   notification?: {
     smartNotification?: {
       leaveForm?: boolean;

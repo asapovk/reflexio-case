@@ -20,10 +20,6 @@ export const Dialog = memo(() => {
 
   const onDialogClose = () => {
     trigger('appController', 'closeDialog', null);
-    //trigger('router', 'goTo', '/users')
-    // trigger('usersController', 'setState', {
-    //   currentUserId: null,
-    // });
   };
 
   return appState.appController.dialog ? (
