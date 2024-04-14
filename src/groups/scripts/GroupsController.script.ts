@@ -47,12 +47,11 @@ export class GroupsControllerScript extends Script<
     }
   }
   async init(args: null) {
-    //this.opts.trigger('groupsRightColumn', 'init', null);
     const res = await this.opts.hook('loadGroups', 'init', 'done', null, 10000);
     if (res.data) {
       this.opts.setStatus('setGroupsList', mapGroupsToRow(res.data));
     }
-    this.opts.setStatus('setIsReady', true);
+    this.opts.setStatus('setIsReady', !res.rejected);
   }
   watch(args: WatchArgsType<_ITriggers, 'groupsController'>): void {
     const throwSuccessEvent = this.opts.catchStatus('throwSuccess', args);
