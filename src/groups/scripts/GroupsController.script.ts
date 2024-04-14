@@ -51,8 +51,8 @@ export class GroupsControllerScript extends Script<
     const res = await this.opts.hook('loadGroups', 'init', 'done', null, 10000);
     if (res.data) {
       this.opts.setStatus('setGroupsList', mapGroupsToRow(res.data));
-      this.opts.setStatus('setIsReady', true);
     }
+    this.opts.setStatus('setIsReady', true);
   }
   watch(args: WatchArgsType<_ITriggers, 'groupsController'>): void {
     const throwSuccessEvent = this.opts.catchStatus('throwSuccess', args);
