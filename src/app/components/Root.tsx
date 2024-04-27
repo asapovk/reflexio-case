@@ -25,7 +25,7 @@ export const AppContainer = () => {
   const currentPage = appState.app.appController.page;
   const sideBar = appState.app.appController.sideBar;
   const isAuth = appState.auth.isAuth;
-  const isRightCol = appState.app.appController.rightColumn;
+  const isRightCol = appState.app.appController?.rightColumn;
 
   return (
     <div>

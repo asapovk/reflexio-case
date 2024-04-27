@@ -16,13 +16,11 @@ import { IUsersTriggers } from '../users/users.slice';
 import { NotificationScript } from './scripts/Notification.script';
 import { INotificationConfig } from '../_interfaces/app/NotificationConfig.interface';
 import { ERRORS } from '../_utils/app/mapErrors';
-
-export interface StagerContext {
-  data: any;
-}
+import { biteAtom } from '@reflexio/bite-atom-v1';
+import { IAtomTriggersApi } from '@reflexio/bite-atom-v1/lib/types';
 
 export type IAppState = {
-  appController: {
+  appController?: {
     isReady: boolean;
     rightColumn?: boolean;
     page: {
@@ -44,7 +42,7 @@ export type IAppState = {
     };
     sideBar?: 'users' | 'groups' | 'off';
   };
-  router: IRouterState;
+  router?: IRouterState;
   notification?: {
     smartNotification?: {
       leaveForm?: boolean;
@@ -56,64 +54,48 @@ export type IAppState = {
   };
 };
 
-export const appInitialState: IAppState = {
-  router: {
-    currentLocation: null,
-    destination: null,
-    isBlocked: false,
-    prevLocation: null,
-  },
-  appController: {
-    isReady: false,
-    page: {},
-    rightColumn: false,
-  },
-};
-
 export type IAppTriggers = {
-  appController: BiteStatusWrap<{
-    init: null;
-    throwError: { text: ERRORS; type: string };
-    throwSuccess: { text: string };
-    setState: Partial<IAppState>;
-    setSideBar: 'users' | 'groups' | 'off';
-    setPage: Partial<IAppState['appController']['page']>;
-    setDialog: Partial<IAppState['appController']['dialog']>;
-    setRightColumn: boolean;
-    closeDialog: null;
-  }>;
-  notification: BiteStatusWrap<{
-    init: { config?: INotificationConfig };
-    show: {
-      text: string;
-      color?: 'ERROR' | 'SUCCESS' | 'PRIMARY';
-      timeout?: number | 'permament';
-    };
-    clickYes: null;
-    clickYesReturnToForm: null;
-    showSmart: Partial<IAppState['notification']['smartNotification']>;
-    setState: Partial<IAppState['notification']>;
-    close: null;
-    drop: null;
-  }>;
+  appController: IAtomTriggersApi<
+    IAppState['appController'],
+    {
+      throwError: { text: ERRORS; type: string };
+      throwSuccess: { text: string };
+      setState: Partial<IAppState>;
+      setSideBar: 'users' | 'groups' | 'off';
+      setPage: Partial<IAppState['appController']['page']>;
+      setDialog: Partial<IAppState['appController']['dialog']>;
+      setRightColumn: boolean;
+      closeDialog: null;
+    }
+  >;
+  notification: IAtomTriggersApi<
+    IAppState['notification'],
+    {
+      init: { config?: INotificationConfig };
+      show: {
+        text: string;
+        color?: 'ERROR' | 'SUCCESS' | 'PRIMARY';
+        timeout?: number | 'permament';
+      };
+      clickYes: null;
+      clickYesReturnToForm: null;
+      showSmart: Partial<IAppState['notification']['smartNotification']>;
+      setState: Partial<IAppState['notification']>;
+      close: null;
+      drop: null;
+    }
+  >;
   router: BiteStatusWrap<IRouterTriggers>;
   stager: BiteStatusWrap<IStagingTriggers<_ITriggers, _IState>>;
-  eventManager: BiteStatusWrap<IEventManagerTriggers<IUsersTriggers, _IState>>;
 };
 
-export const appControllerBite = Bite<
+export const appControllerBite = biteAtom<
   IAppTriggers,
   IAppState,
   'appController',
   _ITriggers
->(
-  {
-    init: null,
-    throwError: null,
-    throwSuccess: null,
-    setState(state, payload) {
-      Object.assign(state.appController, payload);
-    },
+>('appController', {
+  reducers: {
     setRightColumn(state, payload) {
       state.appController.rightColumn = payload;
     },
@@ -123,7 +105,6 @@ export const appControllerBite = Bite<
       }
       Object.assign(state.appController.dialog, payload);
     },
-    setSideBar: null,
     closeDialog(state, payload) {
       state.appController.dialog = null;
     },
@@ -131,57 +112,36 @@ export const appControllerBite = Bite<
       Object.assign(state.appController.page, payload);
     },
   },
-  {
-    script: AppScript,
-    instance: 'stable',
-    watchScope: ['appController', 'router'],
-    initOn: 'init',
-  }
-);
-
-export const notificationBite = Bite<
-  IAppTriggers,
-  IAppState,
-  'notification',
-  _ITriggers
->(
-  {
-    close: null,
-    drop: null,
-    showSmart: null,
-    setState(state, payload) {
-      state.notification = payload as any;
-    },
-    clickYes: null,
-    clickYesReturnToForm: null,
-    show: null,
-    init(state, payload) {
-      state.notification = {
-        // isShown: true,
-        // smartNotification: {
-        //   leaveForm: true,
-        // },
-      } as any;
-    },
+  initialState: {
+    isReady: false,
+    page: {},
+    rightColumn: false,
   },
-  {
-    initOn: 'init',
-    instance: 'stable',
-    watchScope: ['notification'],
-    script: NotificationScript,
-  }
-);
+  script: AppScript,
+  watchScope: ['appController', 'router'],
+});
 
 export const appSlice = Slice<IAppTriggers, IAppState, _ITriggers, _IState>(
   'app',
   {
     appController: appControllerBite,
-    notification: notificationBite,
+    notification: biteAtom('notification', {
+      script: NotificationScript,
+    }),
     router: biteRouting('router'),
     stager: biteStaging('stager'),
-    eventManager: biteEventManager('eventManager', {
-      watchScope: [],
-    }),
   },
-  appInitialState
+  {
+    appController: {
+      isReady: false,
+      sideBar: 'users',
+      page: {},
+    },
+    router: {
+      currentLocation: null,
+      destination: null,
+      isBlocked: false,
+      prevLocation: null,
+    },
+  }
 );
