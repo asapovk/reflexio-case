@@ -95,6 +95,9 @@ export const appControllerBite = biteAtom<
   'appController',
   _ITriggers
 >('appController', {
+  init: (opt, args) => {
+    console.log(opt.getCurrentState());
+  },
   reducers: {
     setRightColumn(state, payload) {
       state.appController.rightColumn = payload;
