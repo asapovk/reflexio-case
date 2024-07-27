@@ -18,7 +18,9 @@ export class AppScript extends EffectiveScript<
     super(opts);
     this.opts = opts;
   }
-  afterEffects(args: WatchArgsType<_ITriggers, 'appController'>): void {}
+  afterEffects(args: WatchArgsType<_ITriggers, 'appController'>): void {
+    console.log('afterEffet', args.trigger, args.status, args.payload);
+  }
   async init(args: null): Promise<void> {
     this.opts.trigger('eventManager', 'init', null);
     this.opts.trigger('router', 'init', null);

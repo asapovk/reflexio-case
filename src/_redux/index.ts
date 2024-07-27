@@ -12,6 +12,7 @@ import { groupsSlice } from '../groups/groups.slice';
 import { invitesSlice } from '../invites/invites.slice';
 import { eventManagerSlice } from '../app/event-manager.slice';
 import { authSlice } from '../auth/auth.slice';
+import { useSystem } from '@reflexio/core-v1';
 
 usersSlice.inject({
   loadUsers: loadUsers,
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
 });
 
 function configureStore() {
+  const system = useSystem();
   const middlewares: Middleware[] = [
     eventManagerSlice.middleware,
     appSlice.middleware,
@@ -39,6 +41,10 @@ function configureStore() {
     rootReducer,
     compose(applyMiddleware(...middlewares))
   );
+
+  store.subscribe(() => {
+    system.afterEffects.handleAfterEffect(store.dispatch);
+  });
 
   return store;
 }
