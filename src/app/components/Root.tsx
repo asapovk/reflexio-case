@@ -13,6 +13,7 @@ import { AuthPageLoading } from '../../auth/components/loadingPage';
 import { AuthPage } from '../../auth/components';
 import { Notification } from './notification/Notification';
 
+import store from '../../_redux';
 export const AppContainer = () => {
   const trigger = useTrigger<_ITriggers>('AppContainer');
   const appState = useReflector<_ITriggers, _IState, _IState>(

@@ -5,7 +5,7 @@ import { commonRoutes } from '../routes/common';
 import { groupsRoutes } from '../routes/groups';
 import { mapError } from '../../_utils/auth/errors';
 import { errorsMap } from '../../_utils/app/mapErrors';
-
+import store from '../../_redux';
 const routes = [...commonRoutes, ...groupsRoutes];
 
 export class AppScript extends EffectiveScript<
@@ -19,6 +19,10 @@ export class AppScript extends EffectiveScript<
   }
   afterEffects(args: WatchArgsType<_ITriggers, 'appController'>): void {
     console.log('afterEffet', args.trigger, args.status, args.payload);
+    console.log(
+      'Store getState:',
+      store ? store.getState() : 'store is undefined'
+    );
   }
   async init(args: null): Promise<void> {
     this.opts.trigger('eventManager', 'init', null);

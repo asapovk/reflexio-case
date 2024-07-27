@@ -7,11 +7,11 @@ import { _IState, _ITriggers } from '../../_redux/types';
 import '../styles/groups-dialog.less';
 
 export const CreateGroupDialog = () => {
-  const trigger = useTrigger<_ITriggers>('CreateGroupDialog');
   const appState = useReflector<_ITriggers, _IState, _IState>(
     (state) => state,
     ['groupsController', 'createGroupForm']
   );
+  const trigger = useTrigger<_ITriggers>('CreateGroupDialog');
 
   return (
     <div className='groups-dialog'>

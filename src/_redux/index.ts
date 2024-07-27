@@ -17,6 +17,7 @@ import { useSystem } from '@reflexio/core-v1';
 usersSlice.inject({
   loadUsers: loadUsers,
 });
+const system = useSystem();
 
 const rootReducer = combineReducers({
   ...appSlice.reducer,
@@ -27,7 +28,6 @@ const rootReducer = combineReducers({
 });
 
 function configureStore() {
-  const system = useSystem();
   const middlewares: Middleware[] = [
     eventManagerSlice.middleware,
     appSlice.middleware,
@@ -42,13 +42,12 @@ function configureStore() {
     compose(applyMiddleware(...middlewares))
   );
 
-  store.subscribe(() => {
-    system.afterEffects.handleAfterEffect(store.dispatch);
-  });
-
   return store;
 }
 const store = configureStore();
+// store.subscribe(() => {
+//   system.afterEffects.handleAfterEffect(store.dispatch);
+// });
 
 export const dispatch = store.dispatch;
 export default store;
