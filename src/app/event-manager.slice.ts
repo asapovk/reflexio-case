@@ -1,5 +1,5 @@
 import { Slice } from '@reflexio/core-v1';
-import { BiteStatusWrap } from '@reflexio/core-v1/lib/types';
+import { type BiteStatusWrap } from '@reflexio/core-v1';
 import { _IState, _ITriggers } from '../_redux/types';
 import { biteEventManager } from '@reflexio/bite-event-manager-v1';
 import { IEventManagerTriggers } from '@reflexio/bite-event-manager-v1/lib/types';
@@ -17,12 +17,19 @@ export type IEMTriggers = {
   >;
 };
 
+const biteEventManagering = biteEventManager<
+  IEMTriggers,
+  null,
+  'eventManager',
+  _ITriggers
+>('eventManager', {
+  watchScope: [],
+});
+
 export const eventManagerSlice = Slice<IEMTriggers, null, _ITriggers, _IState>(
   'eventManager',
   {
-    eventManager: biteEventManager('eventManager', {
-      watchScope: [],
-    }),
+    eventManager: biteEventManagering,
   },
   null
 );

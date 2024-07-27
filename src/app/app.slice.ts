@@ -1,5 +1,5 @@
 import { Bite, Slice } from '@reflexio/core-v1';
-import { BiteStatusWrap } from '@reflexio/core-v1/lib/types';
+import { type BiteStatusWrap } from '@reflexio/core-v1/lib/types';
 import {
   IRouterTriggers,
   IRouterState,
@@ -172,16 +172,31 @@ export const notificationBite = Bite<
   }
 );
 
+const biteRouter = biteRouting<IAppTriggers, IAppState, 'router', _ITriggers>(
+  'router'
+);
+
+const biteStager = biteStaging<IAppTriggers, IAppState, 'stager', _ITriggers>(
+  'stager'
+);
+
+const biteEventManagering = biteEventManager<
+  IAppTriggers,
+  IAppState,
+  'eventManager',
+  _ITriggers
+>('eventManager', {
+  watchScope: [],
+});
+
 export const appSlice = Slice<IAppTriggers, IAppState, _ITriggers, _IState>(
   'app',
   {
     appController: appControllerBite,
     notification: notificationBite,
-    router: biteRouting('router'),
-    stager: biteStaging('stager'),
-    eventManager: biteEventManager('eventManager', {
-      watchScope: [],
-    }),
+    router: biteRouter,
+    stager: biteStager,
+    eventManager: biteEventManagering,
   },
   appInitialState
 );

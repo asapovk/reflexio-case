@@ -1,6 +1,6 @@
-import { Script } from '@reflexio/core-v1/lib/interfaces/IScript';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { EffectiveScript, type WatchArgsType } from '@reflexio/core-v1';
 import { _IState, _ITriggers } from '../../_redux/types';
-import { ScriptOptsType, WatchArgsType } from '@reflexio/core-v1/lib/types';
 import { commonRoutes } from '../routes/common';
 import { groupsRoutes } from '../routes/groups';
 import { mapError } from '../../_utils/auth/errors';
@@ -8,20 +8,17 @@ import { errorsMap } from '../../_utils/app/mapErrors';
 
 const routes = [...commonRoutes, ...groupsRoutes];
 
-export class AppScript extends Script<
+export class AppScript extends EffectiveScript<
   _ITriggers,
   _IState,
   'appController',
-  'init',
-  null
+  'init'
 > {
-  public opts: ScriptOptsType<_ITriggers, _IState, 'appController', null>;
-
   constructor(opts) {
-    super();
+    super(opts);
     this.opts = opts;
   }
-
+  afterEffects(args: WatchArgsType<_ITriggers, 'appController'>): void {}
   async init(args: null): Promise<void> {
     this.opts.trigger('eventManager', 'init', null);
     this.opts.trigger('router', 'init', null);

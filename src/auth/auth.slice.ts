@@ -152,46 +152,65 @@ const authControllerBite = biteLightController<
   },
 });
 
+const biteAuthReq = biteAsync<IAuthTriggers, IAuthState, 'authReq', _ITriggers>(
+  'authReq',
+  {
+    pr: (opt, input) => checkSession(input),
+    errorCatcher: (opt, resp: any) => {
+      if (!resp || !resp.checkSession) {
+        console.log('FAILED AUTHENTICATE');
+        opt.trigger('authController', 'throwHttpError', {
+          type: 'signIn',
+          message: 'FAILED_AUTH',
+        });
+
+        return true;
+      }
+    },
+  }
+);
+
+const biteSignInReq = biteAsync<
+  IAuthTriggers,
+  IAuthState,
+  'signInReq',
+  _ITriggers
+>('signInReq', {
+  pr: (opt, input) => signIn(input),
+  errorCatcher: (opt, resp: any) => {
+    console.log(resp);
+    if (!resp) {
+      opt.trigger('authController', 'throwHttpError', {
+        type: 'signIn',
+        message: 'FAILED_SIGN_IN',
+      });
+
+      return true;
+    } else if (resp.signIn.errorCode) {
+      opt.trigger('authController', 'throwHttpError', {
+        type: 'signIn',
+        message: mapError(resp.signIn.errorCode),
+      });
+
+      return true;
+    }
+  },
+});
+
+const biteAuthForm = biteForms<
+  IAuthTriggers,
+  IAuthState,
+  'authForm',
+  _ITriggers
+>('authForm');
+
 export const authSlice = Slice<IAuthTriggers, IAuthState, _ITriggers, _IState>(
   'auth',
   {
     authController: authControllerBite,
-    authForm: biteForms('authForm'),
-    signInReq: biteAsync('signInReq', {
-      pr: (opt, input) => signIn(input),
-      errorCatcher: (opt, resp: any) => {
-        console.log(resp);
-        if (!resp) {
-          opt.trigger('authController', 'throwHttpError', {
-            type: 'signIn',
-            message: 'FAILED_SIGN_IN',
-          });
-
-          return true;
-        } else if (resp.signIn.errorCode) {
-          opt.trigger('authController', 'throwHttpError', {
-            type: 'signIn',
-            message: mapError(resp.signIn.errorCode),
-          });
-
-          return true;
-        }
-      },
-    }),
-    authReq: biteAsync('authReq', {
-      pr: (opt, input) => checkSession(input),
-      errorCatcher: (opt, resp: any) => {
-        if (!resp || !resp.checkSession) {
-          console.log('FAILED AUTHENTICATE');
-          opt.trigger('authController', 'throwHttpError', {
-            type: 'signIn',
-            message: 'FAILED_AUTH',
-          });
-
-          return true;
-        }
-      },
-    }),
+    authForm: biteAuthForm,
+    signInReq: biteSignInReq,
+    authReq: biteAuthReq,
   },
   authInitialState
 );

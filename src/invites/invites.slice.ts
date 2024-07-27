@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { Bite, Slice } from '@reflexio/core-v1';
-import { BiteStatusWrap } from '@reflexio/core-v1/lib/types';
+import { type BiteStatusWrap } from '@reflexio/core-v1';
 
 import { _IState, _ITriggers } from '../_redux/types';
 import { ResQType, ResMType } from '../_api/_reqTypes';
@@ -69,6 +69,85 @@ export type IInvitesTriggers = {
 
 //form1 => form 2 form 3 onFail => back
 
+const inteteControllerBite = biteLightController<
+  IInvitesTriggers,
+  IInvitesState,
+  'invitesController',
+  _ITriggers
+>('invitesController', {
+  reducer: {
+    setInvitesList(state: IInvitesState, payload) {
+      state.invitesComponent.invitesList = payload;
+    },
+    openCreateInviteForm: null,
+    setIsReady: null,
+    init: null,
+    closeInviteForm: null,
+    openDeleteForm: null,
+    setCurrentInvite(state: IInvitesState, payload) {
+      if (state.invitesController) {
+        state.invitesController.currentInvite = payload;
+      }
+    },
+  },
+  script: {
+    watchScope: ['invitesController'],
+    watch: async (opt, pld) => {
+      const openCreateForm = opt.catchStatus('openCreateInviteForm', pld);
+      if (openCreateForm.isCatched) {
+        opt.trigger('createInviteForm', 'init', {
+          fieldsOpts: [
+            {
+              name: 'inviteName',
+              initialValue: 'link',
+              validators: [],
+              sync: true,
+            },
+          ],
+          onSubmit(fst, ut) {
+            console.log('submit');
+            //opt.trigger('')
+          },
+        });
+      }
+    },
+    init: async (opts, pld) => {
+      const res = await opts.hook(
+        'loadInvites',
+        'init',
+        'done',
+        {
+          limit: 10,
+          offset: 0,
+        },
+        10000
+      );
+      if (res.data) {
+        opts.setStatus('setInvitesList', mapInvitesToRow(res.data));
+        opts.setStatus('setIsReady', true);
+      }
+    },
+  },
+});
+
+const loadInvitesBite = biteAsync<
+  IInvitesTriggers,
+  IInvitesState,
+  'loadInvites',
+  _ITriggers
+>('loadInvites', {
+  pr: (opt, input) => loadInvites(), //opt.injected.loadUsers(),
+  timeout: 9000,
+  errorCatcher: (opt, err) => true,
+});
+
+const createInviteFormBite = biteForms<
+  IInvitesTriggers,
+  IInvitesState,
+  'createInviteForm',
+  _ITriggers
+>('createInviteForm');
+
 export const invitesSlice = Slice<
   IInvitesTriggers,
   IInvitesState,
@@ -88,67 +167,9 @@ export const invitesSlice = Slice<
     //   //    'usersList': (prev, next) => false,
     //   //  }
     // }),
-    invitesController: biteLightController('invitesController', {
-      reducer: {
-        setInvitesList(state: IInvitesState, payload) {
-          state.invitesComponent.invitesList = payload;
-        },
-        openCreateInviteForm: null,
-        setIsReady: null,
-        init: null,
-        closeInviteForm: null,
-        openDeleteForm: null,
-        setCurrentInvite(state: IInvitesState, payload) {
-          if (state.invitesController) {
-            state.invitesController.currentInvite = payload;
-          }
-        },
-      },
-      script: {
-        watchScope: ['invitesController'],
-        watch: async (opt, pld) => {
-          const openCreateForm = opt.catchStatus('openCreateInviteForm', pld);
-          if (openCreateForm.isCatched) {
-            opt.trigger('createInviteForm', 'init', {
-              fieldsOpts: [
-                {
-                  name: 'inviteName',
-                  initialValue: 'link',
-                  validators: [],
-                  sync: true,
-                },
-              ],
-              onSubmit(fst, ut) {
-                console.log('submit');
-                //opt.trigger('')
-              },
-            });
-          }
-        },
-        init: async (opts, pld) => {
-          const res = await opts.hook(
-            'loadInvites',
-            'init',
-            'done',
-            {
-              limit: 10,
-              offset: 0,
-            },
-            10000
-          );
-          if (res.data) {
-            opts.setStatus('setInvitesList', mapInvitesToRow(res.data));
-            opts.setStatus('setIsReady', true);
-          }
-        },
-      },
-    }),
-    createInviteForm: biteForms('createInviteForm'),
-    loadInvites: biteAsync('loadInvites', {
-      pr: (opt, input) => loadInvites(), //opt.injected.loadUsers(),
-      timeout: 9000,
-      errorCatcher: (opt, err) => true,
-    }),
+    invitesController: inteteControllerBite,
+    createInviteForm: createInviteFormBite,
+    loadInvites: loadInvitesBite,
   },
   invitesInitialState
 );

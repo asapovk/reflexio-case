@@ -71,6 +71,102 @@ export type IUsersTriggers = {
 
 //form1 => form 2 form 3 onFail => back
 
+const loadUsersBite = biteAsync<
+  IUsersTriggers,
+  IUsersState,
+  'loadUsers',
+  _ITriggers
+>('loadUsers', {
+  pr: (opt, input) => loadUsers(input),
+  timeout: 9000,
+  errorCatcher: (opt, res: any) => {
+    if (!res.clients) {
+      opt.trigger('usersController', 'throwError', {
+        type: 'http',
+        text: 'LOAD_USERS_FAIL',
+      });
+
+      return true;
+    }
+
+    return false;
+  },
+});
+
+const usersControllerBite = biteLightController<
+  IUsersTriggers,
+  IUsersState,
+  'usersController',
+  _ITriggers
+>('usersController', {
+  reducer: {
+    throwError: null,
+    setError(state: IUsersState, payload) {
+      state.usersController.error = payload;
+    },
+    setUsersList(state: IUsersState, payload) {
+      state.usersComponent.usersList = payload;
+    },
+    openCreateUserForm: null,
+    setIsReady(state: IUsersState, payload) {
+      state.usersController.isReady = true;
+    },
+    init(state: IUsersState, payload) {
+      state.usersController = {
+        isReady: false,
+      };
+    },
+    setCurrentUser(state: IUsersState, payload) {
+      state.usersController.currentUser = payload;
+    },
+  },
+  script: {
+    watchScope: ['usersController'],
+    watch: async (opt, pld) => {
+      const openCreateForm = opt.catchStatus('openCreateUserForm', pld);
+      if (openCreateForm.isCatched) {
+        opt.trigger('createUserForm', 'init', {
+          fieldsOpts: [
+            {
+              name: 'username',
+              initialValue: 'Ivan',
+              validators: [],
+              sync: true,
+            },
+          ],
+          onSubmit(fst, ut) {
+            console.log('submit');
+            //opt.trigger('')
+          },
+        });
+      }
+    },
+    init: async (opts, pld) => {
+      const res = await opts.hook(
+        'loadUsers',
+        'init',
+        'done',
+        {
+          limit: 10,
+          offset: 0,
+        },
+        10000
+      );
+      if (res.data) {
+        opts.setStatus('setUsersList', mapUsersToRow(res.data));
+        opts.setStatus('setIsReady', true);
+      }
+    },
+  },
+});
+
+const createUserForm = biteForms<
+  IUsersTriggers,
+  IUsersState,
+  'createUserForm',
+  _ITriggers
+>('createUserForm');
+
 export const usersSlice = Slice<
   IUsersTriggers,
   IUsersState,
@@ -90,84 +186,9 @@ export const usersSlice = Slice<
     //   //    'usersList': (prev, next) => false,
     //   //  }
     // }),
-    usersController: biteLightController('usersController', {
-      reducer: {
-        throwError: null,
-        setError(state: IUsersState, payload) {
-          state.usersController.error = payload;
-        },
-        setUsersList(state: IUsersState, payload) {
-          state.usersComponent.usersList = payload;
-        },
-        openCreateUserForm: null,
-        setIsReady(state: IUsersState, payload) {
-          state.usersController.isReady = true;
-        },
-        init(state: IUsersState, payload) {
-          state.usersController = {
-            isReady: false,
-          };
-        },
-        setCurrentUser(state: IUsersState, payload) {
-          state.usersController.currentUser = payload;
-        },
-      },
-      script: {
-        watchScope: ['usersController'],
-        watch: async (opt, pld) => {
-          const openCreateForm = opt.catchStatus('openCreateUserForm', pld);
-          if (openCreateForm.isCatched) {
-            opt.trigger('createUserForm', 'init', {
-              fieldsOpts: [
-                {
-                  name: 'username',
-                  initialValue: 'Ivan',
-                  validators: [],
-                  sync: true,
-                },
-              ],
-              onSubmit(fst, ut) {
-                console.log('submit');
-                //opt.trigger('')
-              },
-            });
-          }
-        },
-        init: async (opts, pld) => {
-          const res = await opts.hook(
-            'loadUsers',
-            'init',
-            'done',
-            {
-              limit: 10,
-              offset: 0,
-            },
-            10000
-          );
-          if (res.data) {
-            opts.setStatus('setUsersList', mapUsersToRow(res.data));
-            opts.setStatus('setIsReady', true);
-          }
-        },
-      },
-    }),
-    createUserForm: biteForms('createUserForm'),
-    loadUsers: biteAsync('loadUsers', {
-      pr: (opt, input) => loadUsers(input),
-      timeout: 9000,
-      errorCatcher: (opt, res: any) => {
-        if (!res.clients) {
-          opt.trigger('usersController', 'throwError', {
-            type: 'http',
-            text: 'LOAD_USERS_FAIL',
-          });
-
-          return true;
-        }
-
-        return false;
-      },
-    }),
+    usersController: usersControllerBite,
+    createUserForm: createUserForm,
+    loadUsers: loadUsersBite,
   },
   usersInitialState
 );

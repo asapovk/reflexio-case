@@ -1,21 +1,21 @@
-import { Script } from '@reflexio/core-v1/lib/interfaces/IScript';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { EffectiveScript, type WatchArgsType } from '@reflexio/core-v1';
 import { _IState, _ITriggers } from '../../_redux/types';
-import { ScriptOptsType, WatchArgsType } from '@reflexio/core-v1/lib/types';
+import { ScriptOptsType } from '@reflexio/core-v1/lib/types';
 import { INotificationConfig } from '../../_interfaces/app/NotificationConfig.interface';
 
-export class NotificationScript extends Script<
+export class NotificationScript extends EffectiveScript<
   _ITriggers,
   _IState,
   'notification',
-  'init',
-  null
+  'init'
 > {
-  opts: ScriptOptsType<_ITriggers, _IState, 'notification', null>;
   constructor(opts) {
-    super();
+    super(opts);
     this.opts = opts;
   }
   private cleared = false;
+  afterEffects(args: WatchArgsType<_ITriggers, 'notification'>): void {}
   init(args: { config?: INotificationConfig }): void {
     console.log('init not');
     if (args.config) {

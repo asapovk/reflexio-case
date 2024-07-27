@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Script } from '@reflexio/core-v1/lib/interfaces/IScript';
+import { Script } from '@reflexio/core-v1';
 import { _IState, _ITriggers } from '../../_redux/types';
-import { ScriptOptsType, WatchArgsType } from '@reflexio/core-v1/lib/types';
+import { ScriptOptsType, WatchArgsType } from '@reflexio/core-v1';
 import { mapGroupsToRow } from '../../_utils/groups/mapGroupsToRow';
 import { IGroupRow } from '../../_interfaces/groups/IGroupsRow.interface';
 
@@ -9,10 +9,9 @@ export class GroupsControllerScript extends Script<
   _ITriggers,
   _IState,
   'groupsController',
-  'init',
-  null
+  'init'
 > {
-  opts: ScriptOptsType<_ITriggers, _IState, 'groupsController', null>;
+  opts: ScriptOptsType<_ITriggers, _IState, 'groupsController', {}>;
   constructor(opts) {
     super();
     this.opts = opts;

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable max-len */
 import { Bite, Slice } from '@reflexio/core-v1';
-import { BiteStatusWrap } from '@reflexio/core-v1/lib/types';
+import { type BiteStatusWrap } from '@reflexio/core-v1';
 
 import { _IState, _ITriggers } from '../_redux/types';
 import { ResQType, ResMType } from '../_api/_reqTypes';
@@ -271,6 +271,79 @@ const biteGroupsController = Bite<
   }
 );
 
+const biteLoadGroups = biteAsync<
+  IGroupsTriggers,
+  IGroupsState,
+  'loadGroups',
+  _ITriggers
+>('loadGroups', {
+  pr: (opt, input) => loadGroups(input), //opt.injected.loadUsers(),
+  timeout: 9000,
+  errorCatcher: (opt, res: any) => {
+    if (!res?.groups) {
+      opt.trigger('groupsController', 'throwError', {
+        type: 'http',
+        text: 'LOAD_GROUPS_FAIL',
+      });
+
+      return true;
+    }
+
+    return false;
+  },
+});
+
+const biteCreateGroup = biteAsync<
+  IGroupsTriggers,
+  IGroupsState,
+  'createGroup',
+  _ITriggers
+>('createGroup', {
+  pr: (opt, input) => createGroup(input), //opt.injected.loadUsers(),
+  timeout: 9000,
+  errorCatcher: (opt, resp: any) => {
+    if (!resp?.createGroup) {
+      opt.trigger('groupsController', 'throwError', {
+        type: 'http',
+        text: 'GROUP_CREATE_FAIL',
+      });
+
+      return true;
+    }
+
+    return false;
+  },
+});
+
+const createGroupFormBite = biteForms<
+  IGroupsTriggers,
+  IGroupsState,
+  'createGroupForm',
+  _ITriggers
+>('createGroupForm');
+
+const biteUpdateGroup = biteAsync<
+  IGroupsTriggers,
+  IGroupsState,
+  'updateGroup',
+  _ITriggers
+>('updateGroup', {
+  pr: (opt, input) => updateGroup(input), //opt.injected.loadUsers(),
+  timeout: 9000,
+  errorCatcher: (opt, resp: any) => {
+    if (!resp?.updateGroups) {
+      // opt.trigger('groupsController', 'throwError', {
+      //   type: 'http',
+      //   text: 'GROUP_UPDATE_FAIL',
+      // });
+
+      return true;
+    }
+
+    return false;
+  },
+});
+
 export const groupsSlice = Slice<
   IGroupsTriggers,
   IGroupsState,
@@ -281,56 +354,11 @@ export const groupsSlice = Slice<
   {
     groupsRightColumn: groupsRightColumnBite,
     groupsController: biteGroupsController,
-    createGroupForm: biteForms('createGroupForm'),
+    createGroupForm: createGroupFormBite,
     groupsFormsManager: biteGroupsFormsManager,
-    loadGroups: biteAsync('loadGroups', {
-      pr: (opt, input) => loadGroups(input), //opt.injected.loadUsers(),
-      timeout: 9000,
-      errorCatcher: (opt, res: any) => {
-        if (!res?.groups) {
-          opt.trigger('groupsController', 'throwError', {
-            type: 'http',
-            text: 'LOAD_GROUPS_FAIL',
-          });
-
-          return true;
-        }
-
-        return false;
-      },
-    }),
-    createGroup: biteAsync('createGroup', {
-      pr: (opt, input) => createGroup(input), //opt.injected.loadUsers(),
-      timeout: 9000,
-      errorCatcher: (opt, resp: any) => {
-        if (!resp?.createGroup) {
-          opt.trigger('groupsController', 'throwError', {
-            type: 'http',
-            text: 'GROUP_CREATE_FAIL',
-          });
-
-          return true;
-        }
-
-        return false;
-      },
-    }),
-    updateGroup: biteAsync('updateGroup', {
-      pr: (opt, input) => updateGroup(input), //opt.injected.loadUsers(),
-      timeout: 9000,
-      errorCatcher: (opt, resp: any) => {
-        if (!resp?.updateGroups) {
-          // opt.trigger('groupsController', 'throwError', {
-          //   type: 'http',
-          //   text: 'GROUP_UPDATE_FAIL',
-          // });
-
-          return true;
-        }
-
-        return false;
-      },
-    }),
+    loadGroups: biteLoadGroups,
+    createGroup: biteCreateGroup,
+    updateGroup: biteUpdateGroup,
   },
   JSON.parse(JSON.stringify(groupsInitialState))
 );

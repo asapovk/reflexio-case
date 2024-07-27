@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Script } from '@reflexio/core-v1/lib/interfaces/IScript';
+import { Script } from '@reflexio/core-v1';
 import { _IState, _ITriggers } from '../../_redux/types';
-import { ScriptOptsType, WatchArgsType } from '@reflexio/core-v1/lib/types';
+import { ScriptOptsType, WatchArgsType } from '@reflexio/core-v1';
 import { IUsersRow } from '../../_interfaces/users/IUsersRow.interface';
 import { IInviteRow } from '../../_interfaces/invites/IInvitesRow.interface';
 import { mapUsersToRow } from '../../_utils/users/mapUsersToRow';
@@ -11,10 +11,9 @@ export class GroupsRightColumnScript extends Script<
   _ITriggers,
   _IState,
   'groupsRightColumn',
-  'init',
-  null
+  'init'
 > {
-  opts: ScriptOptsType<_ITriggers, _IState, 'groupsRightColumn', null>;
+  opts: ScriptOptsType<_ITriggers, _IState, 'groupsRightColumn', {}>;
   constructor(opts) {
     super();
     this.opts = opts;
