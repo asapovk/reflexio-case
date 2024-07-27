@@ -39,7 +39,7 @@
     "@babel/preset-typescript": "^7.18.6",
     "@babel/runtime": "7.8.4",
     "@reflexio/bite-async-v1": "1.0.2-alpha",
-    "@reflexio/bite-atom-v1": "^1.0.6-alpha",
+    "@reflexio/bite-atom-v1": "^1.0.7-alpha",
     "@reflexio/bite-derivatives-v1": "1.1.9-alpha",
     "@reflexio/bite-event-manager-v1": "^1.0.3-alpha",
     "@reflexio/bite-forms-v1": "1.0.3-alpha",
