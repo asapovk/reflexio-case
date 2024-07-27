@@ -16,7 +16,6 @@ export class AppScript extends EffectiveScript<
 > {
   constructor(opts) {
     super(opts);
-    this.opts = opts;
   }
   afterEffects(args: WatchArgsType<_ITriggers, 'appController'>): void {
     console.log('afterEffet', args.trigger, args.status, args.payload);
