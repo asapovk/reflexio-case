@@ -1411,19 +1411,19 @@
   resolved "https://registry.npmjs.org/@reflexio/bite-staging-v1/-/bite-staging-v1-1.0.6-alpha.tgz#57d05e1095af79bce03a06916b513fb3db9e11b6"
   integrity sha512-vs+PG4pNsKzRoN6aeryS3h8R+pxOeCU5xBr4LUJ1XpSnhdri4Bo1lkSszUN9kLwtUihNbIoqxXyP1kjr+UadlA==
 
-"@reflexio/core-v1@^1.2.7", "@reflexio/core-v1@^1.2.9":
-  version "1.2.9"
-  resolved "https://registry.npmjs.org/@reflexio/core-v1/-/core-v1-1.2.9.tgz#6f1a5d03ec65371b56b54707eff80236cfe8dff0"
-  integrity sha512-8RFT2g+7kXXnBFyS03qNn9Su12+8yz34Sx8agSFxphAKC64FCRTiAWHXQ7HnFknFLq0hDUsKT1sv/7KE1v+EhQ==
+"@reflexio/core-v1@^1.2.11", "@reflexio/core-v1@^1.2.5":
+  version "1.2.11"
+  resolved "https://registry.npmjs.org/@reflexio/core-v1/-/core-v1-1.2.11.tgz#d646891717859786355210048777af03af2bb9f6"
+  integrity sha512-dmLESD6oYPnLxGc2ik5mNjL/Rnr3Gg4W+ed9xJwT9KZgwrH/KQFnEU5ONsBD43ODUnfX9gsJcrW7vwQAbjCJkA==
   dependencies:
     uuid "^8.3.2"
 
-"@reflexio/react-v1@^1.1.10":
-  version "1.1.10"
-  resolved "https://registry.npmjs.org/@reflexio/react-v1/-/react-v1-1.1.10.tgz#4ef9e0b47fd0734090986f7bd6cf541cf67b0b1f"
-  integrity sha512-WXmkGQ9E+RKEyO/GYdB9i+7S9pvSsf3JhWkxDNwocVK/JI1W4uuC6pfEgNcXj7mvoRXl3nWmbgLx0vMz7MHa8Q==
+"@reflexio/react-v1@^1.1.11":
+  version "1.1.11"
+  resolved "https://registry.npmjs.org/@reflexio/react-v1/-/react-v1-1.1.11.tgz#315785d0fe615a301e31d1e0c7983c3206783229"
+  integrity sha512-oBBdKWN0lktxUkxZTpC4/zqw0IfmcmvtznJNK/POqLlXB6ERG+hIvw5/t4ZyJmXyPOAYyq4IcoCfWr9WcaL9aw==
   dependencies:
-    "@reflexio/core-v1" "^1.2.7"
+    "@reflexio/core-v1" "^1.2.5"
     "@types/react" "^18.2.73"
 
 "@sinclair/typebox@^0.27.8":
