@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { Fragment, memo } from 'react';
+import React, { Fragment, memo, useState } from 'react';
 import { useTrigger } from '@reflexio/react-v1/lib/useTrigger';
 import { useReflector } from '@reflexio/react-v1/lib/useReflector';
 import { _IState, _ITriggers } from '../../_redux/types';
@@ -7,6 +7,8 @@ import '../styles/groups-page.less';
 import { Button } from '../../_ui/Button';
 import { IGroupRow } from '../../_interfaces/groups/IGroupsRow.interface';
 import classNames from 'classnames';
+import { MoreVertical } from 'lucide-react';
+import '../styles/groups-table.less';
 
 export const GroupsTableHeader = () => (
   <div className='table-header'>
@@ -29,6 +31,113 @@ export const GroupsTableRow = (props: {
     <div className='table-column'>{props.group.dtCreate}</div>
   </div>
 );
+
+interface RowCell {
+  value: any;
+  name: string;
+  position?: number;
+}
+interface HeaderCell {
+  name: string;
+}
+
+export const TableHeaderRow = ({ columns }: { columns: Array<HeaderCell> }) => (
+  <tr className={'headerRow'}>
+    {columns.map((c, i) => (
+      <th
+        key={`header_${c.name}`}
+        className={columns.length - 1 !== i ? 'column' : 'actionColumn'}
+      >
+        {c.name}
+      </th>
+    ))}
+  </tr>
+);
+
+export const TableDataRow = ({
+  data,
+  rowId,
+  isSelected,
+  onClick,
+  onHover,
+}: {
+  data: Array<RowCell>;
+  rowId: number | string;
+  isSelected?: boolean;
+  onClick?: (rowId: number) => void;
+  onHover?: (rowId: number) => void;
+}) => (
+  <tr key={rowId} className={'dataRow'}>
+    {data.map((c, i) => (
+      <th
+        key={`${rowId}_${c.name}`}
+        className={data.length - 1 !== i ? 'cell' : 'actionCell'}
+      >
+        {c.value}
+      </th>
+    ))}
+  </tr>
+);
+
+export const TableComponent = () => {
+  const [openDropdown, setOpenDropdown] = useState(null);
+
+  const data = [
+    { id: 1, col1: 'Row 1 Col 1', col2: 'Row 1 Col 2', col3: 'Row 1 Col 3' },
+    { id: 2, col1: 'Row 2 Col 1', col2: 'Row 2 Col 2', col3: 'Row 2 Col 3' },
+    { id: 3, col1: 'Row 3 Col 1', col2: 'Row 3 Col 2', col3: 'Row 3 Col 3' },
+  ];
+
+  return (
+    <div className={'groupsTableContainer'}>
+      <table className={'table'}>
+        <thead>
+          <tr className={'headerRow'}>
+            <th className={'column'}>Column 1</th>
+            <th className={'column'}>Column 2</th>
+            <th className={'column'}>Column 3</th>
+            <th className={'actionColumn'}>Actions</th>
+          </tr>
+        </thead>
+        <tbody className='tableBody'>
+          {data.map((row) => (
+            <tr key={row.id} className={'dataRow'}>
+              <td className={'cell'}>{row.col1}</td>
+              <td className={'cell'}>{row.col2}</td>
+              <td className={'cell'}>{row.col3}</td>
+              <td className={'actionCell'}>
+                <button
+                  className={'menuButton'}
+                  onClick={() =>
+                    setOpenDropdown(openDropdown === row.id ? null : row.id)
+                  }
+                >
+                  <MoreVertical size={20} />
+                </button>
+                {openDropdown === row.id && (
+                  <div className={'dropdownMenu'}>
+                    <button
+                      onClick={() => alert('Edit clicked')}
+                      className={'dropdownItem'}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => alert('Delete clicked')}
+                      className={'dropdownItem'}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 export const GroupsPage = () => {
   const trigger = useTrigger<_ITriggers>('GroupsPage');
@@ -57,6 +166,47 @@ export const GroupsPage = () => {
           </Button>
         ) : null}
       </div>
+      <div className={classNames('groupsTableContainer', 'tableBody')}>
+        <table className={'table'}>
+          <thead>
+            <TableHeaderRow
+              columns={[
+                { name: 'Column 1' },
+                { name: 'Column 2' },
+                { name: 'Column 3' },
+                { name: 'Column Actions' },
+              ]}
+            />
+          </thead>
+          <tbody>
+            {list.map((u, i) => (
+              <TableDataRow
+                key={i}
+                rowId={i}
+                data={[
+                  {
+                    name: 'groupId',
+                    value: u.groupId,
+                  },
+                  {
+                    name: 'name',
+                    value: u.name,
+                  },
+                  {
+                    name: 'dtCreate',
+                    value: u.dtCreate,
+                  },
+                  {
+                    name: 'actions',
+                    value: <div></div>,
+                  },
+                ]}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {/* <TableComponent />
       <div className='users-table'>
         <GroupsTableHeader />
         {list.map((u, i) => (
@@ -67,7 +217,7 @@ export const GroupsPage = () => {
             group={u}
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

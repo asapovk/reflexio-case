@@ -1,0 +1,99 @@
+@import "../../_ui/theme/theme.less";
+
+.tableBody {
+    max-height: calc(100vh - 200px);
+    overflow: auto;
+}
+
+.groupsTableContainer {
+    overflow-x: auto;
+
+  
+  .table {
+    width: 100%;
+    border: solid 1px var(--color-primary);
+    border-collapse: collapse;
+  }
+  
+  .headerRow {
+    height: 80px;
+    background-color: var(--color-background);;
+    text-align: left;
+  }
+  
+  .column {
+    padding: 12px;
+    min-width: 150px;
+    max-width: 300px;
+    width: 100%;
+  }
+  
+  .actionColumn {
+    padding: 12px;
+    min-width: 50px;
+    max-width: 100px;
+    text-align: center;
+  }
+  
+  .dataRow {
+    height: 60px;
+    cursor: pointer;
+    border-top: 1px solid var(--color-primary);
+    &:hover {
+        background-color: var(--color-background-hover);
+    }
+  }
+  
+  .cell {
+    text-align: start;
+    padding: 12px;
+    min-width: 150px;
+    max-width: 300px;
+    width: 100%;
+  }
+  
+  .actionCell {
+    padding: 12px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .menuButton {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    cursor: pointer;
+    padding: 8px;
+  }
+  
+  .menuButton:hover {
+    background:  var(--color-background-hover);
+    border-radius: 4px;
+  }
+  
+  .dropdownMenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--color-background);
+    border: 1px solid var(--color-primary);
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    min-width: 120px;
+  }
+  
+  .dropdownItem {
+    color: var(--color-primary);
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+  }
+  
+  .dropdownItem:hover {
+    background-color: var(--color-background-hover);
+  }
+}
