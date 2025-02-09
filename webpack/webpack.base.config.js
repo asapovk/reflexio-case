@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ProjectDIR = path.resolve(__dirname, '../') + '/';
 const SourceDIR = ProjectDIR; //+ 'src/';
 const BuildDIR = ProjectDIR + './build/';
@@ -39,7 +40,26 @@ module.exports = {
       },
       {
         test: /\.less$/i,
+        exclude: /\.module\.less$/i,
         use: ['style-loader', 'css-loader', 'less-loader'],
+      },
+      {
+        test: /\.module\.less$/i,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                localIdentName: '[local]--[hash:base64:5]',
+                exportLocalsConvention: 'camelCase',
+              },
+            },
+          },
+          {
+            loader: 'less-loader',
+          },
+        ],
       },
       {
         test: /\.(graphql|gql)$/,
@@ -88,6 +108,9 @@ module.exports = {
       typescript: {
         configFile: '../tsconfig.json',
       },
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css', // Define output CSS filename
     }),
     /////  new CleanWebpackPlugin(),
     //   new CompressionPlugin(),

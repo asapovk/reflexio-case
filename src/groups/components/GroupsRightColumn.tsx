@@ -5,6 +5,7 @@ import { Button } from '../../_ui/Button';
 import { useReflector, useTrigger } from '@reflexio/react-v1';
 import { _IState, _ITriggers } from '../../_redux/types';
 import { Menu } from '../../_ui/Menu';
+import { List, ListItem } from '../../_ui/List2.0';
 
 export const GroupsRightColumn = () => {
   const trigger = useTrigger<_ITriggers>('GroupsRightColumn');
@@ -38,9 +39,13 @@ export const GroupsRightColumn = () => {
       />
       <div>
         {isLoading ? 'Loading...' : null}
-        {!isLoading
-          ? usersList.map((u) => <ol key={u.userId}>{u.name}</ol>)
-          : null}
+        {!isLoading ? (
+          <List>
+            {usersList.map((u) => (
+              <ListItem key={u.userId} rowId={u.userId} value={u.name} />
+            ))}
+          </List>
+        ) : null}
       </div>
     </div>
   );

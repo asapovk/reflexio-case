@@ -67,7 +67,11 @@ export const TableDataRow = ({
   onClick?: (rowId: number) => void;
   onHover?: (rowId: number) => void;
 }) => (
-  <tr key={rowId} className={'dataRow'}>
+  <tr
+    onClick={() => onClick(1)}
+    key={rowId}
+    className={classNames('dataRow', { dataRowSelected: isSelected })}
+  >
     {data.map((c, i) => (
       <th
         key={`${rowId}_${c.name}`}
@@ -181,8 +185,12 @@ export const GroupsPage = () => {
           <tbody>
             {list.map((u, i) => (
               <TableDataRow
+                isSelected={i === selectedIndex}
+                onClick={() =>
+                  trigger('router', 'goTo', `/groups/${u.groupId}`)
+                }
                 key={i}
-                rowId={i}
+                rowId={u.groupId}
                 data={[
                   {
                     name: 'groupId',
