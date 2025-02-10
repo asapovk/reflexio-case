@@ -185,6 +185,7 @@ export const groupsStages: { [key: string]: (p?: any) => Stage<OPTS> } = {
       opt.trigger('groupsRightColumn', 'startLoadUsers', null);
     },
     disassemble: async (opt, { paramVals }) => {
+      opt.trigger('groupsRightColumn', 'setLoaded', false);
       opt.trigger('eventManager', 'unbind', { groupsRightColumn: 'loadUsers' });
       opt.trigger('eventManager', 'unbind', { loadUsers: 'done' });
       opt.trigger('groupsRightColumn', 'drop', null);

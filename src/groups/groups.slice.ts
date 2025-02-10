@@ -61,6 +61,7 @@ export type IGroupsState = {
     invitesList: Array<IInviteRow>;
     menu: 'users' | 'invites';
     isLoading: boolean;
+    isLoaded: boolean;
     error?: string;
   };
 };
@@ -76,6 +77,7 @@ export const groupsInitialState: IGroupsState = {
   updateGroup: asyncInitialState(),
   groupsRightColumn: {
     usersList: [],
+    isLoaded: false,
     invitesList: [],
     menu: 'users',
     isLoading: false,
@@ -136,6 +138,7 @@ export type IGroupsTriggers = {
     setInvitesList: Array<IInviteRow>;
     setError: string;
     setLoading: boolean;
+    setLoaded: boolean;
   }>;
   loadGroups: BiteStatusWrap<AsyncTrigger<null, ResQType<'groups'>>>;
   createGroup: BiteStatusWrap<
@@ -178,6 +181,9 @@ const groupsRightColumnBite = Bite<
     },
     loadInvites: null,
     loadUsers: null,
+    setLoaded(state, payload) {
+      state.groupsRightColumn.isLoaded = payload;
+    },
   },
   {
     initOn: 'init',

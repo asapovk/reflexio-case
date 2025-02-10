@@ -48,7 +48,9 @@ export class GroupsRightColumnScript extends Script<
       if (pld.data?.clients) {
         const newUsers = mapUsersToRow(pld.data);
         this.usersLoaded = [...this.usersLoaded, ...newUsers];
+
         this.opts.setStatus('setUsersList', this.usersLoaded);
+        this.opts.setStatus('setLoaded', true);
       } else if (pld.rejected) {
         this.opts.setStatus('setError', 'Произошла ошибка');
       }
