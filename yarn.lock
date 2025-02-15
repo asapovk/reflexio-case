@@ -1391,10 +1391,10 @@
   resolved "https://registry.npmjs.org/@reflexio/bite-event-manager-v1/-/bite-event-manager-v1-1.0.3-alpha.tgz#e0b20ac21335de78e430d62c41a554efb7efb61f"
   integrity sha512-iVJ0fD9DR/NYDx0TW94X+UlIwfZfAT32BD5MNp8aMesMHmWJEDI9mD2IgxyvTIY4KmWS14RM121x+FJg1OtTJA==
 
-"@reflexio/bite-forms-v1@1.0.3-alpha":
-  version "1.0.3-alpha"
-  resolved "https://registry.npmjs.org/@reflexio/bite-forms-v1/-/bite-forms-v1-1.0.3-alpha.tgz#d31ade596b35955789d1d96b4fcf65ed4c7d088b"
-  integrity sha512-IR4uuPill/SAZvpeArJJEH8QWIQByPdvgjKBQv3DZY+80b3K/3riaSSfIGAFc+dsyCAhSmxG9/KkSiXAZR3UoA==
+"@reflexio/bite-forms-v1@1.0.10-alpha":
+  version "1.0.10-alpha"
+  resolved "https://registry.npmjs.org/@reflexio/bite-forms-v1/-/bite-forms-v1-1.0.10-alpha.tgz#18b939d78b0c9950aea96dfaaf3d9ed7ec659876"
+  integrity sha512-1uUnftGmYmgurvcx2Ici6I5d2s5kCGA3T2/qwpBJPe39BhQOnKlJDwIB5I/2cy8hXXANq90Oc4qjCNtnU5pCIw==
 
 "@reflexio/bite-light-controller-v1@1.0.2-alpha":
   version "1.0.2-alpha"

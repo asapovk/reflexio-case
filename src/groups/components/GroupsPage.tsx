@@ -11,6 +11,7 @@ import styles from '../styles/groups-page.module.less';
 import { TableHeaderRow } from '../../_ui/Table2.0/TableHeader';
 import { TableDataRow } from '../../_ui/Table2.0/TableRow';
 import { Table } from '../../_ui/Table2.0/Table';
+import { Filters } from '../../filters/components';
 
 export const GroupsPage = () => {
   const trigger = useTrigger<_ITriggers>('GroupsPage');
@@ -39,6 +40,7 @@ export const GroupsPage = () => {
           </Button>
         ) : null}
       </div>
+      <Filters />
       <Table>
         <TableHeaderRow
           columns={[

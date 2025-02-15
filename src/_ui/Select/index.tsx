@@ -1,16 +1,18 @@
 import React from 'react';
 import './styles.less';
 
-export const Select = () => (
-  <select name='pets' id='pet-select' className='oj-ui-select'>
-    <option value='' className='oj-ui-select-item'>
-      --Please choose an option--
-    </option>
-    <option value='dog'>Dog</option>
-    <option value='cat'>Cat</option>
-    <option value='hamster'>Hamster</option>
-    <option value='parrot'>Parrot</option>
-    <option value='spider'>Spider</option>
-    <option value='goldfish'>Goldfish</option>
+export interface ISelect {
+  onChange: (val) => void,
+  value?: string;
+  opts: Array<{
+    text: string,
+    value: any,
+  }>
+}
+
+
+export const Select = (props: ISelect) => (
+  <select value={props.value} onChange={(e) => props.onChange(e.target.value)} name='pets' id='pet-select' className='oj-ui-select'>
+    {props.opts.map( (o, i) => <option key={i} value={o.value}>{o.text}</option>)}
   </select>
 );

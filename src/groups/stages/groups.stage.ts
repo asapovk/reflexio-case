@@ -26,22 +26,27 @@ export const groupsStages: { [key: string]: (p?: any) => Stage<OPTS> } = {
     validator: (opt) =>
       Boolean(opt.getCurrentState().groups.groupsComponent.groupsList.length),
     notValidHandler: async (opt) => {
-      const res = await opt.hook(
-        'groupsController',
-        'init',
-        'setIsReady',
-        null,
-        5000
-      );
-      const data = opt.getCurrentState().groups.loadGroups.data;
-      opt.trigger('groupsController', 'setGroupsList', mapGroupsToRow(data));
+      try {
+        const res = await opt.hook(
+          'groupsController',
+          'init',
+          'setIsReady',
+          null,
+          5000
+        );
+        const data = opt.getCurrentState().groups.loadGroups.data;
+        opt.trigger('groupsController', 'setGroupsList', mapGroupsToRow(data));
 
-      return Boolean(res);
+        return Boolean(res);
+      } catch (e) {
+        return false;
+      }
     },
   }),
   PAGE_GROUPS: (params?: Array<number>) => ({
     name: 'PAGE_GROUPS',
     assemble: async (opt) => {
+      opt.trigger('formPageController', 'init', null);
       opt.trigger('appController', 'setPage', {
         groups: true,
       });

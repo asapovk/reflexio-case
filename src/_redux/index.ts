@@ -13,6 +13,7 @@ import { invitesSlice } from '../invites/invites.slice';
 import { eventManagerSlice } from '../app/event-manager.slice';
 import { authSlice } from '../auth/auth.slice';
 import { useSystem } from '@reflexio/core-v1';
+import { formPageSlice } from '../filters/form-page.slice';
 
 usersSlice.inject({
   loadUsers: loadUsers,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   ...groupsSlice.reducer,
   ...invitesSlice.reducer,
   ...authSlice.reducer,
+  ...formPageSlice.reducer,
 });
 
 function configureStore() {
@@ -35,6 +37,7 @@ function configureStore() {
     groupsSlice.middleware,
     invitesSlice.middleware,
     authSlice.middleware,
+    formPageSlice.middleware,
   ];
 
   const store = createStore(
