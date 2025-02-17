@@ -12,6 +12,9 @@ import { TableHeaderRow } from '../../_ui/Table2.0/TableHeader';
 import { TableDataRow } from '../../_ui/Table2.0/TableRow';
 import { Table } from '../../_ui/Table2.0/Table';
 import { Filters } from '../../filters/components';
+import { TableMenu } from './TableMenu';
+import { FilterRow } from './Filter';
+import { Suggester } from './Suggester';
 
 export const GroupsPage = () => {
   const trigger = useTrigger<_ITriggers>('GroupsPage');
@@ -26,21 +29,11 @@ export const GroupsPage = () => {
   return (
     <div>
       <div className={styles.header}>
-        <Button onClick={() => trigger('router', 'goTo', '/groups/create')}>
-          Создать группу
-        </Button>
-        {currentGroup ? (
-          <Button
-            ml='20px'
-            onClick={() =>
-              trigger('router', 'goTo', `/groups/${currentGroup.groupId}/edit`)
-            }
-          >
-            Редактировать группу
-          </Button>
-        ) : null}
+        <TableMenu />
+        {/* <FilterRow /> */}
+        <Suggester />
       </div>
-      <Filters />
+      {/* <Filters /> */}
       <Table>
         <TableHeaderRow
           columns={[
