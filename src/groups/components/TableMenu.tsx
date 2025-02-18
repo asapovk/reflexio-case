@@ -7,7 +7,7 @@ import { Button } from '../../_ui/Button';
 import { IGroupRow } from '../../_interfaces/groups/IGroupsRow.interface';
 import classNames from 'classnames';
 import { MoreVertical, Filter, Plus, Edit } from 'lucide-react';
-import styles from '../styles/groups-page.module.less';
+import styles from './table-menu-styles.module.less';
 import { TableHeaderRow } from '../../_ui/Table2.0/TableHeader';
 import { TableDataRow } from '../../_ui/Table2.0/TableRow';
 import { Table } from '../../_ui/Table2.0/Table';
@@ -37,9 +37,12 @@ export const TableMenu = () => {
       <IconButton h='50px' w='50px' m={'10px'}>
         <Plus onClick={() => trigger('router', 'goTo', '/groups/create')} />
       </IconButton>
-      <IconButton h='50px' w='50px' m={'10px'}>
-        <Filter />
-      </IconButton>
+      <div className={styles.menuButtonContainer}>
+        <IconButton h='50px' w='50px'>
+          <Filter />
+        </IconButton>
+        <div className={styles.menuButtonContainerBadge}>13</div>
+      </div>
     </div>
   );
 };

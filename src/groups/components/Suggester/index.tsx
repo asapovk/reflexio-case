@@ -5,15 +5,17 @@ import { useReflector } from '@reflexio/react-v1/lib/useReflector';
 import { _IState, _ITriggers } from '../../../_redux/types';
 import style from './styles.module.less';
 import { SuggesterItem } from './SuggesterItem';
-import { Dropdown } from './DropDown';
+import { Dropdown } from './Dropdown';
 
 export interface SuggesterItem {
   filterName: string;
-  operator: string;
-  filterValue: {
+  operator?: string;
+  filterValue?: {
     name: string;
     value: any;
   };
+  deleteButton?: boolean;
+  backButton?: boolean;
 }
 
 const suggesterItems: Array<SuggesterItem> = [
@@ -24,6 +26,11 @@ const suggesterItems: Array<SuggesterItem> = [
       name: 'Artur',
       value: 1,
     },
+    deleteButton: true,
+  },
+  {
+    filterName: 'Genre',
+    backButton: true,
   },
 ];
 

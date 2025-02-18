@@ -15,6 +15,7 @@ import { Filters } from '../../filters/components';
 import { TableMenu } from './TableMenu';
 import { FilterRow } from './Filter';
 import { Suggester } from './Suggester';
+import { Filter } from './FiltSortSearch/Filter';
 
 export const GroupsPage = () => {
   const trigger = useTrigger<_ITriggers>('GroupsPage');
@@ -30,10 +31,8 @@ export const GroupsPage = () => {
     <div>
       <div className={styles.header}>
         <TableMenu />
-        {/* <FilterRow /> */}
-        <Suggester />
+        <Filter />
       </div>
-      {/* <Filters /> */}
       <Table>
         <TableHeaderRow
           columns={[

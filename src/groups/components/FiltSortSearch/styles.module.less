@@ -1,0 +1,32 @@
+@import "../../../_ui/theme/theme.less";
+
+.root {
+    margin-top: 20px;
+}
+
+.filtersLabel {
+  margin-left: 5px;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.filtersCount {
+    font: sans-serif xx-small;
+}
+
+.resetFiltersButton {
+    color: var(--color-text-on-background);
+    background-color: var(--color-panel-hover);
+    cursor: pointer;
+    border: 1px solid var(--color-text-on-background);
+    font: sans-serif xx-small;
+    padding: 5px;
+    border-radius: 5px;
+    margin-left: 20px;
+    &:active {
+        color: var(--color-text-on-background-strong);
+        background-color: var(--color-panel-active);
+    }
+}
