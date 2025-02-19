@@ -1,3 +1,5 @@
+import { contactsMock } from './contacts.mock';
+
 export const loadGroups = async (args: any) =>
   new Promise((res, rej) => {
     setTimeout(() => {
@@ -74,6 +76,19 @@ export const loadGroups = async (args: any) =>
             dtCreate: '2024-03-10T02:18:07.350Z',
           },
         ],
+      });
+    }, 1500);
+  });
+
+export const loadContacts = async (args: {
+  limit: number;
+  offset: number;
+  search?: string;
+}) =>
+  new Promise((res, rej) => {
+    setTimeout(() => {
+      res({
+        contacts: contactsMock.contacts,
       });
     }, 1500);
   });

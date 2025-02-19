@@ -13,9 +13,9 @@ import { TableDataRow } from '../../_ui/Table2.0/TableRow';
 import { Table } from '../../_ui/Table2.0/Table';
 import { Filters } from '../../filters/components';
 import { TableMenu } from './TableMenu';
-import { FilterRow } from './Filter';
 import { Suggester } from './Suggester';
 import { Filter } from './FiltSortSearch/Filter';
+import { FiltSortSearch } from './FiltSortSearch';
 
 export const GroupsPage = () => {
   const trigger = useTrigger<_ITriggers>('GroupsPage');
@@ -31,7 +31,7 @@ export const GroupsPage = () => {
     <div>
       <div className={styles.header}>
         <TableMenu />
-        <Filter />
+        <FiltSortSearch />
       </div>
       <Table>
         <TableHeaderRow

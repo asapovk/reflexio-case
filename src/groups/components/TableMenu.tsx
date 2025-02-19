@@ -12,6 +12,8 @@ import { TableHeaderRow } from '../../_ui/Table2.0/TableHeader';
 import { TableDataRow } from '../../_ui/Table2.0/TableRow';
 import { Table } from '../../_ui/Table2.0/Table';
 import { IconButton } from '../../_ui/IconButton';
+import { SearchInput } from './SearchInput';
+import { Search } from './FiltSortSearch/Search';
 
 export const TableMenu = () => {
   const trigger = useTrigger<_ITriggers>('GroupsPageTableMenu');
@@ -24,7 +26,7 @@ export const TableMenu = () => {
   const currentGroup = appState.groups.groupsController.currentGroup;
 
   return (
-    <div>
+    <div className={styles.tableMenu}>
       {currentGroup ? (
         <IconButton h='50px' w='50px' m={'10px'}>
           <Edit
@@ -43,6 +45,7 @@ export const TableMenu = () => {
         </IconButton>
         <div className={styles.menuButtonContainerBadge}>13</div>
       </div>
+      <Search />
     </div>
   );
 };
