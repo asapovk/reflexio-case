@@ -2,10 +2,19 @@
 
 
 .root {
-    input {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-panel);
+    .icon {
+        padding: 13px;
+        cursor: pointer;
+    }
+    textarea {
         width: 100%;
         color: white;
-        height: 40px;
+        max-height: 40px;
+        overflow-y: auto;
+        resize: vertical;
         background-color: var(--color-panel);
         border: none;
         &:focus {
